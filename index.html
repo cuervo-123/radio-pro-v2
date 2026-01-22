@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Bapp Radio – 24MB Ready (Worker + Virtual List)</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: dark;
+    /* PALETA AZUL METÁLICA TIPO APP CENTER */
+    --bg:#020512;
+    --bg-soft:#050a1f;
+    --panel:#050b1d;
+    --line:#18253b;
+    --fg:#f3f6ff;
+    --accent:#1f8bff;
+    --accent-soft:rgba(31,139,255,0.35);
+    --accent-strong:#4ac3ff;
+    --muted:#8ea3b0;
+    --accent-glow:0.25;
+
+    /* CUERVO */
+    --cuervo-opacity: .16;
+    --cuervo-glow: 26; /* px */
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(circle at top left, rgba(74,195,255,0.15), transparent 55%),
+      radial-gradient(circle at bottom right, rgba(31,139,255,0.18), transparent 55%),
+      radial-gradient(circle at top right, rgba(10,20,60,0.7), #020512);
+    color:var(--fg);
+    font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    display:flex;
+    flex-direction:column;
+  }
+
+  header{
+    position:sticky;
+    top:0;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+    justify-content:space-between;
+    padding:12px 18px;
+    background:linear-gradient(90deg, rgba(3,10,30,0.96), rgba(8,18,48,0.98));
+    border-bottom:1px solid var(--line);
+    box-shadow:0 0 25px rgba(31,139,255,var(--accent-glow));
+    backdrop-filter:blur(14px);
+  }
+
+  h1{
+    margin:0;
+    font-size:18px;
+    letter-spacing:.03em;
+    display:flex;
+    align-items:center;
+    gap:.5rem;
+  }
+  h1::before{
+    content:"📡";
+    font-size:20px;
+  }
+
+  main{
+    max-width:1200px;
+    width:100%;
+    margin:0 auto;
+    padding:18px 16px 24px;
+    display:grid;
+    grid-template-columns:360px 1fr;
+    gap:18px;
+  }
+
+  @media (max-width:900px){
+    main{
+      grid-template-columns:1fr;
+    }
+    .list-wrap{
+      height:55vh;
+    }
+  }
+
+  .card{
+    background:linear-gradient(145deg, rgba(7,15,40,0.96), rgba(3,8,24,0.98));
+    border:1px solid rgba(40,70,120,0.9);
+    border-radius:18px;
+    min-height:120px;
+    box-shadow:
+      0 18px 35px rgba(0,0,0,0.55),
+      0 0 0 1px rgba(10,40,80,0.65),
+      0 0 25px rgba(31,139,255,0.18);
+    overflow:hidden;
+  }
+
+  .card h2{
+    margin:0;
+    padding:12px 16px;
+    font-size:14px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    border-bottom:1px solid rgba(35,60,105,0.9);
+    color:#d5ebff;
+    background:linear-gradient(120deg, rgba(12,32,70,0.9), rgba(5,16,40,0.95));
+  }
+
+  .card .body{
+    padding:12px 14px 14px;
+  }
+
+  .row{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+
+  input[type="search"]{
+    flex:1;
+    min-width:130px;
+    padding:9px 11px;
+    border-radius:999px;
+    border:1px solid rgba(40,70,120,0.9);
+    background:radial-gradient(circle at top left,#050c20,#020618);
+    color:var(--fg);
+    font-size:13px;
+    outline:none;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,0.8);
+  }
+  input[type="search"]::placeholder{
+    color:rgba(180,197,220,0.6);
+  }
+
+  button{
+    padding:8px 12px;
+    border-radius:999px;
+    border:1px solid rgba(54,88,140,0.9);
+    background:radial-gradient(circle at top, #07152e, #050a1d);
+    color:var(--fg);
+    cursor:pointer;
+    font-size:13px;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    transition:
+      border-color .18s ease,
+      box-shadow .18s ease,
+      transform .1s ease,
+      background .18s ease;
+    box-shadow:0 0 0 1px rgba(0,0,0,0.85);
+  }
+  button:hover{
+    border-color:var(--accent-strong);
+    box-shadow:
+      0 0 12px rgba(31,139,255,0.6),
+      0 10px 22px rgba(0,0,0,0.8);
+    background:radial-gradient(circle at top,#0c2144,#050a1e);
+    transform:translateY(-1px);
+  }
+  button:active{
+    transform:translateY(0);
+    box-shadow:0 0 0 1px rgba(0,0,0,0.9);
+  }
+
+  button.party-on{
+    border-color: var(--accent-strong);
+    box-shadow:
+      0 0 16px rgba(255,255,255,0.5),
+      0 0 32px rgba(31,139,255,0.9);
+    background: radial-gradient(circle at top, #1f8bff, #050a1d);
+  }
+
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:4px 9px;
+    border-radius:999px;
+    background:linear-gradient(135deg, rgba(6,18,40,0.95), rgba(3,9,24,0.96));
+    border:1px solid rgba(40,70,120,0.9);
+    font-size:11px;
+    box-shadow:0 0 0 1px rgba(0,0,0,0.8);
+  }
+  .pill strong{color:var(--accent-strong);}
+
+  .muted{
+    color:var(--muted);
+    font-size:12px;
+  }
+
+  /* LISTA VIRTUALIZADA */
+  .list-wrap{
+    height:70vh;
+    border:1px solid rgba(40,70,120,0.9);
+    border-radius:14px;
+    background:radial-gradient(circle at top left,#050c20,#050816);
+    position:relative;
+    overflow:auto;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,0.85);
+  }
+  .list-wrap::-webkit-scrollbar{ width:7px; }
+  .list-wrap::-webkit-scrollbar-track{ background:rgba(4,10,22,0.95); }
+  .list-wrap::-webkit-scrollbar-thumb{
+    background:linear-gradient(180deg,#1f8bff,#4ac3ff);
+    border-radius:999px;
+  }
+
+  .spacer{height:0px}
+  .items{position:absolute;top:0;left:0;right:0}
+
+  .item{
+    display:grid;
+    grid-template-columns:44px 1fr auto;
+    gap:10px;
+    align-items:center;
+    padding:9px 10px;
+    border:1px solid transparent;
+    border-radius:12px;
+    background:radial-gradient(circle at top left,#071226,#050912);
+    margin:6px 8px;
+    transition:
+      border-color .16s ease,
+      box-shadow .16s ease,
+      background .16s ease,
+      transform .1s ease;
+  }
+  .item:hover{
+    border-color:rgba(80,130,200,0.9);
+    box-shadow:0 0 10px rgba(31,139,255,0.55);
+    background:radial-gradient(circle at top left,#0b1b3a,#060b18);
+    transform:translateY(-1px);
+  }
+  .item.active{
+    border-color:var(--accent);
+    box-shadow:0 0 0 1px rgba(43,120,210,0.9), 0 0 16px rgba(31,139,255,0.8);
+  }
+
+  .logo{
+    width:44px;
+    height:44px;
+    border-radius:10px;
+    object-fit:cover;
+    background:radial-gradient(circle at 30% 30%,#1f8bff,#020615);
+    border:1px solid #172236;
+    display:grid;
+    place-items:center;
+    font-size:18px;
+    box-shadow:0 0 10px rgba(10,50,100,0.8);
+  }
+
+  .meta{display:flex;flex-direction:column}
+  .name{font-weight:600;font-size:14px}
+  .group{font-size:12px;color:var(--muted)}
+
+  .now{
+    font-size:14px;
+    color:#d6f7ff;
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    align-items:center;
+  }
+  #nowName{ color:var(--accent-strong); }
+
+  .controls{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .controls .grow{flex:1}
+
+  /* ======= ZONA VIOLETA + CUERVO LAVA (WATERMARK) ======= */
+  .viz-wrap{
+    position:relative;
+    margin:10px 0 6px;
+    border-radius:999px;
+    overflow:hidden;
+    isolation:isolate; /* importante para blend */
+  }
+
+  /* VISUALIZADOR TIPO ECUALIZADOR */
+  .viz{
+    height:60px;
+    border-radius:999px;
+    background:radial-gradient(circle at top,#040b18,#02040b);
+    border:1px solid rgba(110, 30, 33, 0.95);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.9),
+      0 0 22px rgba(200, 18, 197, 0.7);
+    padding:6px 10px;
+    display:flex;
+    align-items:flex-end;
+    gap:3px;
+    overflow:hidden;
+    position:relative;
+    z-index:1;
+  }
+
+  .viz .bar{
+    flex:1;
+    min-width:3px;
+    border-radius:999px;
+    background: linear-gradient(to top, #0e2a55, #4ac3ff);
+    transform-origin:bottom;
+    transform:scaleY(.25);
+    opacity:.28;
+    transition: transform .08s linear, opacity .08s linear;
+    height: 100%;
+    will-change: transform;
+  }
+
+  /* Cuervo overlay */
+  .cuervo-wm{
+    position:absolute;
+    inset:0;
+    z-index:2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+    opacity: var(--cuervo-opacity);
+    filter:
+      saturate(1.2)
+      drop-shadow(0 0 calc(var(--cuervo-glow)*1px) rgba(200, 18, 197, .45));
+    mix-blend-mode: screen;
+    animation: cuervoBreath 3.2s ease-in-out infinite;
+  }
+
+  .cuervo-wm img{
+    width:min(520px, 105%);
+    max-width:760px;
+    height:auto;
+    opacity:1;
+    transform: translateY(6%);
+    filter: blur(.15px);
+  }
+
+  /* Shimmer encima del cuervo */
+  .cuervo-wm::after{
+    content:"";
+    position:absolute;
+    inset:-40%;
+    background: linear-gradient(120deg,
+      rgba(255,255,255,0) 40%,
+      rgba(230,180,255,.22) 50%,
+      rgba(255,255,255,0) 60%);
+    transform: translateX(-65%) rotate(10deg);
+    animation: cuervoShimmer 6.5s ease-in-out infinite;
+    opacity:.0;
+    mix-blend-mode: screen;
+  }
+
+  /* Party = más presencia */
+  .viz-wrap.party .cuervo-wm{
+    filter:
+      saturate(1.35)
+      drop-shadow(0 0 calc((var(--cuervo-glow) + 22)*1px) rgba(200, 18, 197, .62));
+  }
+  .viz-wrap.party .cuervo-wm::after{ opacity:.9; }
+
+  @keyframes cuervoBreath{
+    0%,100%{ transform: scale(0.985); }
+    50%    { transform: scale(1.03); }
+  }
+  @keyframes cuervoShimmer{
+    0%   { transform: translateX(-65%) rotate(10deg); opacity:0; }
+    18%  { opacity:.75; }
+    50%  { transform: translateX(65%) rotate(10deg); opacity:.25; }
+    100% { transform: translateX(65%) rotate(10deg); opacity:0; }
+  }
+
+  audio{
+    width:100%;
+    margin-top:4px;
+    filter:drop-shadow(0 0 10px rgba(0,0,0,0.9));
+  }
+
+  label input[type="range"]{ vertical-align:middle; }
+  input[type="range"]{ accent-color:var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Bapp Radio</h1>
+  <div class="row">
+    <span class="pill">Auto: <strong>emisoras de radio.m3u</strong></span>
+    <span id="status" class="muted">Preparando…</span>
+  </div>
+</header>
+
+<main>
+  <!-- Columna izquierda: búsqueda + listado (virtual) -->
+  <section class="card">
+    <h2>Listado de emisoras</h2>
+    <div class="body">
+      <div class="row" style="margin-bottom:10px">
+        <input id="q" type="search" placeholder="Buscar por nombre o grupo…" />
+        <button id="btnReset">Limpiar</button>
+      </div>
+      <div class="row" style="margin-bottom:10px">
+        <button id="btnOnlyFavs">👑 Solo favoritos</button>
+        <button id="btnAll">📚 Ver todo</button>
+        <div class="pill"><label><input id="toggleLogos" type="checkbox" checked /> Logos</label></div>
+        <div class="pill">Mostrando: <span id="count">0</span></div>
+        <div class="pill">Favoritos: <span id="favCount">0</span></div>
+      </div>
+
+      <!-- Lista virtualizada -->
+      <div id="listWrap" class="list-wrap" role="listbox" aria-label="Emisoras">
+        <div id="spacer" class="spacer"></div>
+        <div id="items" class="items"></div>
+      </div>
+
+      <div class="muted" style="margin-top:8px">Doble clic o Enter para reproducir · ⭐ para favoritos</div>
+    </div>
+  </section>
+
+  <!-- Columna derecha: reproductor + herramientas -->
+  <section class="card">
+    <h2>Reproductor</h2>
+    <div class="body">
+      <div class="now">
+        Ahora suena: <strong id="nowName">—</strong> <span id="nowGroup" class="muted"></span>
+      </div>
+
+      <!-- ✅ NUEVO: envuelto para meter CUERVO LAVA dentro del violeta -->
+      <div id="vizWrap" class="viz-wrap">
+        <div id="viz" class="viz"></div>
+
+        <!-- Cuervo Lava watermark -->
+        <div id="cuervoWM" class="cuervo-wm" aria-hidden="true">
+          <img src="assets/cuervo-lava.png" alt="">
+        </div>
+      </div>
+
+      <audio id="audio" controls preload="none"></audio>
+
+      <div class="controls" style="margin-top:10px">
+        <button id="btnPrev">⏮️ Anterior</button>
+        <button id="btnPlay">▶️ Reproducir</button>
+        <button id="btnPause">⏸️ Pausa</button>
+        <button id="btnStop">⏹️ Stop</button>
+        <button id="btnNext">⏭️ Siguiente</button>
+        <button id="btnParty">🌈 Party</button>
+        <div class="grow"></div>
+        <label class="muted">Volumen <input id="vol" type="range" min="0" max="1" step="0.01" value="1" /></label>
+      </div>
+
+      <div class="row" style="margin-top:12px">
+        <button id="btnReload">🔄 Recargar</button>
+        <div class="grow"></div>
+        <button id="btnExportM3U">⬇️ Exportar favoritos .m3u</button>
+        <button id="btnExportJSON">⬇️ Exportar favoritos .json</button>
+      </div>
+
+      <div class="muted" style="margin-top:8px">HLS con <code>hls.js</code> si hace falta. Guarda volumen, última emisora y favoritos.</div>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+(() => {
+  const DEFAULT_PLAYLIST_URL = 'emisoras de radio.m3u'; // tu archivo
+  const BATCH_SIZE = 500;
+  const ITEM_HEIGHT = 72; // px (alto aprox de .item con márgenes)
+  const OVERSCAN = 6;     // ítems extra arriba/abajo
+
+  const LS_LAST_INDEX = 'bapp.radio.lastIndex';
+  const LS_FAVORITES  = 'bapp.radio.favorites';
+  const LS_VOLUME     = 'bapp.radio.volume';
+  const LS_LOGOS      = 'bapp.radio.showLogos';
+
+  // DOM
+  const $btnParty = document.getElementById('btnParty');
+  const $status   = document.getElementById('status');
+  const $q        = document.getElementById('q');
+  const $btnReset = document.getElementById('btnReset');
+  const $btnOnlyFavs = document.getElementById('btnOnlyFavs');
+  const $btnAll   = document.getElementById('btnAll');
+  const $toggleLogos = document.getElementById('toggleLogos');
+  const $count    = document.getElementById('count');
+  const $favCount = document.getElementById('favCount');
+
+  const $listWrap = document.getElementById('listWrap');
+  const $spacer   = document.getElementById('spacer');
+  const $items    = document.getElementById('items');
+
+  const $audio    = document.getElementById('audio');
+  const $nowName  = document.getElementById('nowName');
+  const $nowGroup = document.getElementById('nowGroup');
+
+  const $btnPlay  = document.getElementById('btnPlay');
+  const $btnPause = document.getElementById('btnPause');
+  const $btnStop  = document.getElementById('btnStop');
+  const $btnPrev  = document.getElementById('btnPrev');
+  const $btnNext  = document.getElementById('btnNext');
+  const $btnReload = document.getElementById('btnReload');
+
+  const $btnExportM3U = document.getElementById('btnExportM3U');
+  const $btnExportJSON= document.getElementById('btnExportJSON');
+  const $vol      = document.getElementById('vol');
+
+  const $viz      = document.getElementById('viz');
+
+  // ✅ Cuervo / zona violeta
+  const $vizWrap  = document.getElementById('vizWrap');
+
+  // Estado
+  let isParty = false;
+  let isPlaying = false; // FLAG de reproducción real
+  let $playerCard = null;
+  let stations = [];           // {name,url,logo,group, nameL, groupL}
+  let filteredIdx = [];        // índices (sobre stations) tras filtro
+  let onlyFavs = false;
+  let showLogos = true;
+  let currentFilteredPos = -1; // posición dentro de filteredIdx
+  let hls = null;
+
+  // Equalizador fake (visual)
+  let vizBars = [];
+  let vizTimer = null;
+
+  const favorites = new Set(JSON.parse(localStorage.getItem(LS_FAVORITES) || '[]'));
+  updateFavCount();
+
+  // ---------- Utils ----------
+  function encodeUrlMaybe(u){
+    try {
+      const abs = new URL(u, window.location.href);
+      if (/^https?:/i.test(abs.protocol)) return abs.href;
+    } catch(_) {}
+    return encodeURI(u);
+  }
+  function isFav(url){ return favorites.has(url); }
+  function toggleFav(url){
+    if(isFav(url)) favorites.delete(url); else favorites.add(url);
+    localStorage.setItem(LS_FAVORITES, JSON.stringify([...favorites]));
+    updateFavCount();
+    if(onlyFavs) applyFilterDebounced();
+  }
+  function updateFavCount(){ $favCount.textContent = favorites.size; }
+
+  function guessNameFromUrl(u){
+    try {
+      const p = new URL(u, window.location.href);
+      const last = p.pathname.split('/').filter(Boolean).pop() || p.host;
+      return decodeURIComponent((last || '').replace(/\.[a-z0-9]+$/i,'')).replace(/[_\-]+/g,' ').trim() || p.host;
+    } catch {
+      return u;
+    }
+  }
+
+  // ===== Cuervo: reacciona a beat/volumen/party =====
+  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+
+  function setCuervoReactive(avgLevel){
+    if(!$vizWrap) return;
+    const v = clamp01(Number($audio?.volume ?? 1));
+    const a = clamp01(avgLevel ?? 0);
+
+    // base + volumen + beat
+    const opacity = 0.12 + (v * 0.18) + (a * 0.20) + (isParty ? 0.06 : 0);
+    const glowPx  = 18 + Math.round((v * 26) + (a * 46) + (isParty ? 18 : 0));
+
+    document.documentElement.style.setProperty('--cuervo-opacity', String(opacity.toFixed(3)));
+    document.documentElement.style.setProperty('--cuervo-glow', String(glowPx));
+
+    // clase Party en wrapper para shimmer fuerte
+    $vizWrap.classList.toggle('party', !!isParty);
+  }
+
+  // ---------- Worker (stream parser) ----------
+  const workerSrc = `
+    self.onmessage = async (e) => {
+      const { url, batchSize } = e.data;
+      try{
+        const base = new URL(url);
+        const res = await fetch(url, { cache: 'no-store' });
+        if(!res.ok) throw new Error('HTTP ' + res.status);
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+
+        let { value, done } = await reader.read();
+        let buf = value ? decoder.decode(value, {stream:true}) : '';
+        let out = [];
+        let pending = null;
+
+        const attrRe = /([\\w-]+)="([^"]*)"/g;
+
+        function pushStation(name, u, logo, group){
+          let abs;
+          try { abs = new URL(u, base).href; } catch { abs = u; }
+          out.push({ name, url: abs, logo, group });
+          if(out.length >= batchSize){
+            self.postMessage({ type:'batch', items: out });
+            out = [];
+          }
+        }
+
+        function guessNameFromUrl(u){
+          try{
+            const abs = new URL(u, base);
+            const last = abs.pathname.split('/').filter(Boolean).pop() || abs.host;
+            return decodeURIComponent((last || '').replace(/\\.[a-z0-9]+$/i,'')).replace(/[_\\-]+/g,' ').trim() || abs.host;
+          }catch{
+            return u;
+          }
+        }
+
+        function processLines(chunk){
+          const lines = chunk.split(/\\r?\\n/);
+          const lastLine = lines.pop();
+          for(const lineRaw of lines){
+            const line = lineRaw.trim();
+            if(!line || line.startsWith('#EXTM3U')) continue;
+
+            if(line.startsWith('#EXTINF')){
+              const commaIdx = line.indexOf(',');
+              const head = commaIdx>=0 ? line.slice(0, commaIdx) : line;
+              const displayName = commaIdx>=0 ? line.slice(commaIdx+1).trim() : '';
+              const attrs = {};
+              attrRe.lastIndex = 0;
+              let m; while((m = attrRe.exec(head))){ attrs[m[1]] = m[2]; }
+              pending = {
+                name: (attrs['tvg-name'] || displayName || '').trim(),
+                logo: (attrs['tvg-logo'] || attrs['logo'] || '').trim(),
+                group: (attrs['group-title'] || '').trim()
+              };
+            } else if(line.startsWith('#')){
+            } else {
+              const urlLine = line;
+              const name = (pending && pending.name) ? pending.name : guessNameFromUrl(urlLine);
+              const logo = pending && pending.logo ? pending.logo : '';
+              const group = pending && pending.group ? pending.group : '';
+              pushStation(name, urlLine, logo, group);
+              pending = null;
+            }
+          }
+          return lastLine || '';
+        }
+
+        while(!done){
+          buf = processLines(buf);
+          ({ value, done } = await reader.read());
+          if(value){ buf += decoder.decode(value, {stream:true}); }
+        }
+        buf = processLines(buf);
+
+        if(buf.trim() && !buf.trim().startsWith('#')){
+          const urlLine = buf.trim();
+          const name = guessNameFromUrl(urlLine);
+          pushStation(name, urlLine, '', '');
+        }
+
+        if(out.length) self.postMessage({ type:'batch', items: out });
+        self.postMessage({ type:'done' });
+      }catch(err){
+        self.postMessage({ type:'error', message: String(err) });
+      }
+    };
+  `;
+
+  const worker = new Worker(
+    URL.createObjectURL(
+      new Blob([workerSrc], {type:'application/javascript'})
+    )
+  );
+
+  worker.onmessage = (e) => {
+    const { type } = e.data;
+    if(type === 'batch'){
+      const items = e.data.items.map(s => ({
+        ...s,
+        name: s.name || guessNameFromUrl(s.url),
+        nameL: (s.name || '').toLowerCase(),
+        groupL: (s.group || '').toLowerCase(),
+      }));
+      stations.push(...items);
+      $status.textContent = `Cargadas ${stations.length}…`;
+      appendToFilter(items.length);
+    } else if(type === 'done'){
+      $status.textContent = `Listo: ${stations.length} emisoras`;
+      finalizeFilter();
+      restoreLast();
+    } else if(type === 'error'){
+      alert('Error al cargar/parsing M3U: ' + e.data.message);
+      $status.textContent = 'Error';
+    }
+  };
+
+  // ---------- Filtro + lista virtual ----------
+  function computeFilteredIndices(){
+    const q = $q.value.toLowerCase().trim();
+    const out = [];
+    for(let i=0;i<stations.length;i++){
+      const s = stations[i];
+      if(onlyFavs && !isFav(s.url)) continue;
+      if(!q || s.nameL.includes(q) || s.groupL.includes(q)){
+        out.push(i);
+      }
+    }
+    return out;
+  }
+
+  function appendToFilter(addedCount){
+    const q = $q.value.toLowerCase().trim();
+    const start = stations.length - addedCount;
+    for(let i=start;i<stations.length;i++){
+      const s = stations[i];
+      if(onlyFavs && !isFav(s.url)) continue;
+      if(!q || s.nameL.includes(q) || s.groupL.includes(q)){
+        filteredIdx.push(i);
+      }
+    }
+    $count.textContent = filteredIdx.length;
+    updateVirtual();
+  }
+
+  function finalizeFilter(){
+    filteredIdx = computeFilteredIndices();
+    $count.textContent = filteredIdx.length;
+    updateVirtual(true);
+  }
+
+  const applyFilterDebounced = debounce(() => {
+    filteredIdx = computeFilteredIndices();
+    $count.textContent = filteredIdx.length;
+    currentFilteredPos = Math.min(currentFilteredPos, filteredIdx.length-1);
+    updateVirtual(true);
+  }, 150);
+
+  function debounce(fn, wait){
+    let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), wait); };
+  }
+
+  function updateVirtual(resetScroll=false){
+    const total = filteredIdx.length;
+    $spacer.style.height = (total * ITEM_HEIGHT) + 'px';
+
+    const scrollTop = $listWrap.scrollTop;
+    const viewHeight = $listWrap.clientHeight;
+
+    let start = Math.floor(scrollTop / ITEM_HEIGHT) - OVERSCAN;
+    start = Math.max(0, start);
+    let end = Math.ceil((scrollTop + viewHeight) / ITEM_HEIGHT) + OVERSCAN;
+    end = Math.min(total, end);
+
+    const frag = document.createDocumentFragment();
+    for(let i=start;i<end;i++){
+      const idx = filteredIdx[i];
+      const el = makeItem(idx);
+      el.style.position = 'absolute';
+      el.style.top = (i * ITEM_HEIGHT + 4) + 'px';
+      el.dataset.pos = String(i);
+      frag.appendChild(el);
+    }
+    $items.innerHTML = '';
+    $items.appendChild(frag);
+
+    if(resetScroll){ $listWrap.scrollTop = 0; }
+    highlightActive();
+  }
+
+  $listWrap.addEventListener('scroll', () => {
+    requestAnimationFrame(()=>updateVirtual(false));
+  });
+
+  function logoElem(s){
+    if(!showLogos || !s.logo){
+      const div = document.createElement('div');
+      div.className = 'logo';
+      div.textContent = '📻';
+      return div;
+    }
+    const img = document.createElement('img');
+    img.className = 'logo';
+    img.src = s.logo;
+    img.alt = 'Logo';
+    img.referrerPolicy = 'no-referrer';
+    img.loading = 'lazy';
+    img.onerror = () => { img.replaceWith(fallbackLogo()); };
+    return img;
+  }
+  function fallbackLogo(){
+    const div = document.createElement('div');
+    div.className = 'logo';
+    div.textContent = '📻';
+    return div;
+  }
+
+  function makeItem(absIndex){
+    const s = stations[absIndex];
+    const li = document.createElement('div');
+    li.className = 'item';
+    li.tabIndex = 0;
+    li.role = 'option';
+    li.dataset.index = String(absIndex);
+
+    const logo = logoElem(s);
+    const meta = document.createElement('div'); meta.className = 'meta';
+    const name = document.createElement('div'); name.className='name'; name.textContent = s.name || '(Sin nombre)';
+    const group = document.createElement('div'); group.className='group'; group.textContent = s.group || '—';
+    meta.appendChild(name); meta.appendChild(group);
+
+    const favBtn = document.createElement('button');
+    favBtn.className = 'fav';
+    favBtn.title = 'Agregar/Quitar de favoritos';
+    favBtn.textContent = isFav(s.url) ? '⭐' : '☆';
+    favBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleFav(s.url);
+      favBtn.textContent = isFav(s.url) ? '⭐' : '☆';
+      li.classList.toggle('favItem', isFav(s.url));
+    });
+
+    li.appendChild(logo);
+    li.appendChild(meta);
+    li.appendChild(favBtn);
+
+    li.addEventListener('click', () => playByAbsoluteIndex(absIndex));
+    li.addEventListener('dblclick', () => playByAbsoluteIndex(absIndex));
+    li.addEventListener('keydown', (ev) => { if(ev.key==='Enter') playByAbsoluteIndex(absIndex); });
+
+    const pos = Number(li.dataset.pos);
+    if(pos === currentFilteredPos) li.classList.add('active');
+
+    return li;
+  }
+
+  function highlightActive(){
+    const children = [...$items.children];
+    children.forEach(c => c.classList.remove('active'));
+    if(currentFilteredPos >= 0){
+      const el = children.find(c => Number(c.dataset.pos) === currentFilteredPos);
+      if(el) el.classList.add('active');
+    }
+  }
+
+  // ---------- Reproductor ----------
+  function setNow(s){
+    $nowName.textContent = s.name || '—';
+    $nowGroup.textContent = s.group ? `· ${s.group}` : '';
+  }
+
+  function cleanupHls(){
+    if(hls){ try{ hls.destroy(); }catch(_){}
+      hls=null;
+    }
+  }
+
+  function playByAbsoluteIndex(absIndex){
+    const s = stations[absIndex]; if(!s) return;
+    currentFilteredPos = filteredIdx.indexOf(absIndex);
+    setNow(s);
+    highlightActive();
+    localStorage.setItem(LS_LAST_INDEX, String(absIndex));
+
+    isPlaying = false;
+    $audio.pause();
+    $audio.removeAttribute('src');
+    cleanupHls();
+
+    const url = encodeUrlMaybe(s.url);
+    if(url.endsWith('.m3u8')){
+      if(Hls.isSupported()){
+        hls = new Hls({enableWorker:true, lowLatencyMode:true});
+        hls.loadSource(url);
+        hls.attachMedia($audio);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => { $audio.play().catch(()=>{}); });
+        hls.on(Hls.Events.LEVEL_LOADED,    () => { $audio.play().catch(()=>{}); });
+        hls.on(Hls.Events.FRAG_BUFFERED,   () => { $audio.play().catch(()=>{}); });
+        hls.on(Hls.Events.ERROR, (_, data) => {
+          if(data.fatal){
+            cleanupHls();
+            $audio.src = url;
+            $audio.play().catch(()=>{});
+          }
+        });
+      } else {
+        $audio.src = url;
+        $audio.play().catch(()=>{});
+      }
+    } else {
+      $audio.src = url;
+      $audio.play().catch(()=>{});
+    }
+  }
+
+  // ---------- Equalizador visual (fake) + PARTY MODE ----------
+  function createVizBars(count){
+    if(!$viz) return;
+    $viz.innerHTML = '';
+    vizBars = [];
+    for(let i=0;i<count;i++){
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      $viz.appendChild(bar);
+      vizBars.push(bar);
+    }
+  }
+
+  function stopViz(){
+    if(vizTimer){
+      clearInterval(vizTimer);
+      vizTimer = null;
+    }
+    if(vizBars.length){
+      vizBars.forEach(bar=>{
+        bar.style.transform = 'scaleY(0.2)';
+        bar.style.opacity = '0.15';
+      });
+    }
+    if($playerCard && isParty){
+      $playerCard.style.background = '';
+      $playerCard.style.boxShadow = '';
+    }
+    document.documentElement.style.setProperty('--accent-glow', '0.25');
+
+    // cuervo baja cuando no suena
+    setCuervoReactive(0);
+  }
+
+  function startViz(){
+    if(!vizBars.length) createVizBars(48);
+    stopViz();
+
+    vizTimer = setInterval(()=>{
+      if(!$audio || !isPlaying){
+        vizBars.forEach(bar=>{
+          bar.style.transform = 'scaleY(0.2)';
+          bar.style.opacity = '0.15';
+        });
+        if($playerCard && isParty){
+          $playerCard.style.background = '';
+          $playerCard.style.boxShadow = '';
+        }
+        document.documentElement.style.setProperty('--accent-glow', '0.25');
+        setCuervoReactive(0);
+        return;
+      }
+
+      const base = ($audio.volume || 1);
+      const t = performance.now() / 160;
+      let levelSum = 0;
+
+      vizBars.forEach((bar, i)=>{
+        const n = vizBars.length;
+        const centerFactor = 0.6 + Math.sin((i / (n-1)) * Math.PI) * 0.9;
+        const wave = 0.5 + 0.5*Math.sin((i*0.35) + t);
+        const noise = Math.random()*0.7 + 0.3;
+        const raw = (noise * wave * centerFactor * base) * 1.4;
+        const norm = Math.min(1, raw);
+        levelSum += norm;
+
+        const scale = 0.1 + norm * 4.8;
+        bar.style.transform = `scaleY(${scale})`;
+        bar.style.opacity   = 0.2 + norm * 0.9;
+
+        const hue = 190 + norm * 90;
+        const light = 40 + norm * 30;
+        bar.style.background = `linear-gradient(to top, rgba(5,15,35,0.45), hsl(${hue}, 98%, ${light}%))`;
+      });
+
+      const avg = levelSum / vizBars.length;
+
+      // ✅ cuervo reacciona a beat promedio
+      setCuervoReactive(avg);
+
+      document.documentElement.style.setProperty('--accent-glow', String(0.35 + avg * 0.9));
+
+      if(isParty && $playerCard){
+        const strength = Math.min(1, avg * 1.6);
+        const hueBase = 210 + strength * 40;
+        const sat = 70 + strength * 25;
+        const light1 = 10 + strength * 15;
+        const light2 = 22 + strength * 28;
+
+        $playerCard.style.background =
+          `linear-gradient(135deg, hsl(${hueBase}, ${sat}%, ${light1}%), hsl(${hueBase+15}, ${sat}%, ${light2}%))`;
+
+        const glow = 0.4 + strength * 1.3;
+        $playerCard.style.boxShadow =
+          `0 18px 35px rgba(0,0,0,0.7),
+           0 0 0 1px rgba(10,40,80,0.7),
+           0 0 40px rgba(31,139,255,${glow})`;
+      }
+    }, 50);
+  }
+
+  // ---------- Listeners de reproducción (confiables) ----------
+  $audio.addEventListener('playing', () => { isPlaying = true; startViz(); });
+  $audio.addEventListener('pause',   () => { isPlaying = false; stopViz(); });
+  $audio.addEventListener('ended',   () => { isPlaying = false; stopViz(); });
+  $audio.addEventListener('waiting', () => { isPlaying = false; });
+  $audio.addEventListener('stalled', () => { isPlaying = false; });
+  $audio.addEventListener('suspend', () => { isPlaying = false; });
+  $audio.addEventListener('emptied', () => { isPlaying = false; });
+
+  // ---------- Restaurar última ----------
+  function restoreLast(){
+    const savedAbs = Number(localStorage.getItem(LS_LAST_INDEX));
+    if(Number.isFinite(savedAbs)){
+      const pos = filteredIdx.indexOf(savedAbs);
+      if(pos !== -1){
+        currentFilteredPos = pos;
+        playByAbsoluteIndex(savedAbs);
+        const y = pos * ITEM_HEIGHT - 8;
+        $listWrap.scrollTop = Math.max(0, y);
+        return;
+      }
+    }
+    if(filteredIdx.length){
+      currentFilteredPos = 0;
+      playByAbsoluteIndex(filteredIdx[0]);
+    }
+  }
+
+  // ---------- Export favoritos ----------
+  function exportM3U(){
+    const lines = ['#EXTM3U'];
+    for(const url of favorites){
+      const s = stations.find(st => st.url === url);
+      if(!s) continue;
+      const name = s.name || 'Radio';
+      const logo = s.logo ? ` tvg-logo="${s.logo.replace(/"/g,'')}"` : '';
+      const group = s.group ? ` group-title="${s.group.replace(/"/g,'')}"` : '';
+      lines.push(`#EXTINF:-1${logo}${group},${name}`);
+      lines.push(s.url);
+    }
+    downloadBlob(lines.join('\n'), 'favoritos.m3u', 'audio/x-mpegurl');
+  }
+  function exportJSON(){
+    const out = [];
+    for(const url of favorites){
+      const s = stations.find(st => st.url === url);
+      if(s) out.push({ name:s.name, url:s.url, logo:s.logo, group:s.group });
+    }
+    downloadBlob(JSON.stringify(out, null, 2), 'favoritos.json', 'application/json');
+  }
+  function downloadBlob(text, filename, mime){
+    const blob = new Blob([text], {type: mime});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 0);
+  }
+
+  // ---------- Controles ----------
+  $btnPlay.addEventListener('click', () => $audio.play().catch(()=>{}));
+  $btnPause.addEventListener('click', () => $audio.pause());
+  $btnStop.addEventListener('click', () => { $audio.pause(); $audio.currentTime = 0; });
+
+  $btnPrev.addEventListener('click', () => {
+    if(!filteredIdx.length) return;
+    currentFilteredPos = (currentFilteredPos - 1 + filteredIdx.length) % filteredIdx.length;
+    playByAbsoluteIndex(filteredIdx[currentFilteredPos]);
+  });
+  $btnNext.addEventListener('click', () => {
+    if(!filteredIdx.length) return;
+    currentFilteredPos = (currentFilteredPos + 1) % filteredIdx.length;
+    playByAbsoluteIndex(filteredIdx[currentFilteredPos]);
+  });
+
+  $vol.addEventListener('input', () => {
+    const val = Number($vol.value);
+    $audio.volume = val;
+    localStorage.setItem(LS_VOLUME, String(val));
+
+    // ✅ cuervo responde inmediatamente al volumen aunque no haya beat
+    setCuervoReactive(isPlaying ? 0.25 : 0);
+  });
+
+  $q.addEventListener('input', applyFilterDebounced);
+  $btnReset.addEventListener('click', () => { $q.value=''; applyFilterDebounced(); });
+
+  $btnOnlyFavs.addEventListener('click', () => { onlyFavs = true; applyFilterDebounced(); });
+  $btnAll.addEventListener('click', () => { onlyFavs = false; applyFilterDebounced(); });
+  $btnReload.addEventListener('click', () => { startLoad(); });
+
+  $btnParty.addEventListener('click', () => {
+    isParty = !isParty;
+    $btnParty.classList.toggle('party-on', isParty);
+    if(isParty){
+      $btnParty.textContent = '🌈 Party ON';
+    } else {
+      $btnParty.textContent = '🌈 Party';
+      if($playerCard){
+        $playerCard.style.background = '';
+        $playerCard.style.boxShadow = '';
+      }
+      document.documentElement.style.setProperty('--accent-glow', '0.25');
+    }
+    // ✅ aplica clase party a la zona violeta del cuervo
+    setCuervoReactive(isPlaying ? 0.25 : 0);
+  });
+
+  $btnExportM3U.addEventListener('click', exportM3U);
+  $btnExportJSON.addEventListener('click', exportJSON);
+
+  $toggleLogos.addEventListener('change', () => {
+    showLogos = $toggleLogos.checked;
+    localStorage.setItem(LS_LOGOS, showLogos ? '1':'0');
+    updateVirtual();
+  });
+
+  // ---------- Inicio ----------
+  function startLoad(){
+    stations = [];
+    filteredIdx = [];
+    currentFilteredPos = -1;
+    $items.innerHTML = '';
+    $spacer.style.height = '0px';
+    $count.textContent = '0';
+    $status.textContent = 'Cargando…';
+
+    const src = encodeUrlMaybe(DEFAULT_PLAYLIST_URL);
+    worker.postMessage({ url: src, batchSize: BATCH_SIZE });
+  }
+
+  const vPrev = Number(localStorage.getItem(LS_VOLUME));
+  if(Number.isFinite(vPrev)){
+    $vol.value = vPrev;
+    $audio.volume = vPrev;
+  }
+
+  const logosPrev = localStorage.getItem(LS_LOGOS);
+  if(logosPrev !== null){
+    showLogos = logosPrev === '1';
+    $toggleLogos.checked = showLogos;
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    startLoad();
+    createVizBars(48);
+    const cards = document.querySelectorAll('.card');
+    if (cards.length > 1) $playerCard = cards[1];
+
+    // set cuervo base
+    setCuervoReactive(0);
+  });
+
+})();
+</script>
+
+</body>
+</html>
