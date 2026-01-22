@@ -287,22 +287,23 @@
   }
 
   /* ===== LAVA STAGE (más grande) ===== */
-  .lava-stage{
-    height:190px;               /* ✅ MÁS GRANDE */
-    margin:10px 0 8px;
-    border-radius:18px;
-    overflow:hidden;
-    position:relative;
-    border:1px solid rgba(110, 30, 33, 0.55);
-    background:
-      radial-gradient(circle at 15% 35%, rgba(200,18,197,.18), transparent 62%),
-      radial-gradient(circle at 85% 60%, rgba(31,139,255,.12), transparent 62%),
-      linear-gradient(180deg, rgba(2,6,18,.95), rgba(2,5,14,.98));
-    box-shadow:
-      0 0 0 1px rgba(0,0,0,0.9),
-      0 0 22px rgba(31,139,255,0.25),
-      0 0 26px rgba(200, 18, 197, 0.28);
-  }
+.lava-stage{
+  height: 320px;              /* ✅ antes 190px → ahora MUCHO más grande */
+  margin:10px 0 8px;
+  border-radius:18px;
+  overflow:hidden;
+  position:relative;
+  border:1px solid rgba(110, 30, 33, 0.55);
+  background:
+    radial-gradient(circle at 15% 35%, rgba(200,18,197,.18), transparent 62%),
+    radial-gradient(circle at 85% 60%, rgba(31,139,255,.12), transparent 62%),
+    linear-gradient(180deg, rgba(2,6,18,.95), rgba(2,5,14,.98));
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.9),
+    0 0 22px rgba(31,139,255,0.25),
+    0 0 26px rgba(200, 18, 197, 0.28);
+}
+
 
   /* ✅ PARTY VIOLETA EN LAVA STAGE */
   .lava-stage.party{
