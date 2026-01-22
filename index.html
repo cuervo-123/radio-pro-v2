@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Bapp Radio – 24MB Ready (Worker + Virtual List)</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
   :root{
     color-scheme: dark;
-    /* PALETA AZUL METÁLICA TIPO APP CENTER */
+    /* PALETA AZUL METÁLICA */
     --bg:#020512;
     --bg-soft:#050a1f;
     --panel:#050b1d;
@@ -21,8 +22,8 @@
     --accent-glow:0.25;
 
     /* CUERVO */
-    --cuervo-opacity: .16;
-    --cuervo-glow: 26; /* px */
+    --cuervo-opacity: .22;   /* base visible */
+    --cuervo-glow: 22;       /* px */
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
@@ -63,10 +64,7 @@
     align-items:center;
     gap:.5rem;
   }
-  h1::before{
-    content:"📡";
-    font-size:20px;
-  }
+  h1::before{ content:"📡"; font-size:20px; }
 
   main{
     max-width:1200px;
@@ -79,12 +77,8 @@
   }
 
   @media (max-width:900px){
-    main{
-      grid-template-columns:1fr;
-    }
-    .list-wrap{
-      height:55vh;
-    }
+    main{ grid-template-columns:1fr; }
+    .list-wrap{ height:55vh; }
   }
 
   .card{
@@ -110,9 +104,7 @@
     background:linear-gradient(120deg, rgba(12,32,70,0.9), rgba(5,16,40,0.95));
   }
 
-  .card .body{
-    padding:12px 14px 14px;
-  }
+  .card .body{ padding:12px 14px 14px; }
 
   .row{
     display:flex;
@@ -133,9 +125,7 @@
     outline:none;
     box-shadow:inset 0 0 0 1px rgba(0,0,0,0.8);
   }
-  input[type="search"]::placeholder{
-    color:rgba(180,197,220,0.6);
-  }
+  input[type="search"]::placeholder{ color:rgba(180,197,220,0.6); }
 
   button{
     padding:8px 12px;
@@ -189,10 +179,7 @@
   }
   .pill strong{color:var(--accent-strong);}
 
-  .muted{
-    color:var(--muted);
-    font-size:12px;
-  }
+  .muted{ color:var(--muted); font-size:12px; }
 
   /* LISTA VIRTUALIZADA */
   .list-wrap{
@@ -275,184 +262,102 @@
   }
   .controls .grow{flex:1}
 
-  /* ======= ZONA VIOLETA + CUERVO LAVA (WATERMARK) ======= */
+  /* ===== Equalizer (barras) ===== */
   .viz-wrap{
-    position:relative;
     margin:10px 0 6px;
     border-radius:999px;
     overflow:hidden;
-    isolation:isolate; /* importante para blend */
-  }
-
-  /* VISUALIZADOR TIPO ECUALIZADOR */
-  .viz{
-    height:60px;
-    border-radius:999px;
+    border:1px solid rgba(110, 30, 33, 0.65);
     background:radial-gradient(circle at top,#040b18,#02040b);
-    border:1px solid rgba(110, 30, 33, 0.95);
     box-shadow:
       0 0 0 1px rgba(0,0,0,0.9),
       0 0 22px rgba(200, 18, 197, 0.7);
     padding:6px 10px;
+  }
+  .viz{
+    height:60px;
     display:flex;
     align-items:flex-end;
     gap:3px;
-    overflow:hidden;
-    position:relative;
-    z-index:1;
   }
-
   .viz .bar{
     flex:1;
     min-width:3px;
     border-radius:999px;
     background: linear-gradient(to top, #0e2a55, #4ac3ff);
     transform-origin:bottom;
-    transform:scaleY(.25);
-    opacity:.28;
-    transition: transform .08s linear, opacity .08s linear;
-    height: 100%;
-    will-change: transform;
+    transform:scaleY(.20);
+    opacity:.22;
+    height:100%;
+    will-change: transform, opacity;
   }
 
-  /* Cuervo overlay */
-  .cuervo-wm{
+  /* ===== LAVA STAGE: cuervo grande debajo ===== */
+  .lava-stage{
+    height:96px;
+    margin:10px 0 8px;
+    border-radius:16px;
+    overflow:hidden;
+    position:relative;
+    border:1px solid rgba(110, 30, 33, 0.55);
+    background:
+      radial-gradient(circle at 15% 35%, rgba(200,18,197,.22), transparent 60%),
+      radial-gradient(circle at 85% 60%, rgba(31,139,255,.14), transparent 62%),
+      linear-gradient(180deg, rgba(2,6,18,.95), rgba(2,5,14,.98));
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.9),
+      0 0 26px rgba(200, 18, 197, 0.38);
+  }
+
+  .cuervo-lava{
     position:absolute;
     inset:0;
-    z-index:2;
     display:flex;
     align-items:center;
     justify-content:center;
     pointer-events:none;
     opacity: var(--cuervo-opacity);
+    mix-blend-mode: normal;
     filter:
-      saturate(1.2)
-      drop-shadow(0 0 calc(var(--cuervo-glow)*1px) rgba(200, 18, 197, .45));
-    mix-blend-mode: screen;
-    animation: cuervoBreath 3.2s ease-in-out infinite;
+      contrast(1.12)
+      saturate(1.25)
+      drop-shadow(0 0 calc(var(--cuervo-glow)*1px) rgba(200, 18, 197, .65))
+      drop-shadow(0 0 18px rgba(31,139,255,.20));
+    transform: translateY(2px);
+    animation: cuervoBreath 3.0s ease-in-out infinite;
   }
 
-  .cuervo-wm img{
-    width:min(520px, 105%);
-    max-width:760px;
+  .cuervo-lava img{
+    width:min(560px, 92%);
+    max-width:720px;
     height:auto;
     opacity:1;
-    transform: translateY(6%);
-    filter: blur(.15px);
+    transform: translateY(4%);
   }
 
-  /* Shimmer encima del cuervo */
-  .cuervo-wm::after{
+  .lava-stage.party .cuervo-lava::after{
     content:"";
     position:absolute;
-    inset:-40%;
+    inset:-50%;
     background: linear-gradient(120deg,
-      rgba(255,255,255,0) 40%,
-      rgba(230,180,255,.22) 50%,
-      rgba(255,255,255,0) 60%);
-    transform: translateX(-65%) rotate(10deg);
-    animation: cuervoShimmer 6.5s ease-in-out infinite;
-    opacity:.0;
+      rgba(255,255,255,0) 42%,
+      rgba(230,180,255,.18) 50%,
+      rgba(255,255,255,0) 58%);
+    transform: translateX(-70%) rotate(12deg);
+    animation: cuervoShimmer 5.8s ease-in-out infinite;
     mix-blend-mode: screen;
+    opacity:1;
   }
-
-/* ===== LAVA STAGE (espacio debajo del equalizer) ===== */
-.lava-stage{
-  position:relative;
-  height:140px;              /* ajusta si quieres más grande */
-  margin:10px 0 8px;
-  border-radius:18px;
-  overflow:hidden;
-  border:1px solid rgba(110, 30, 33, 0.65);
-  background:
-    radial-gradient(circle at 20% 20%, rgba(200,18,197,.28), transparent 55%),
-    radial-gradient(circle at 80% 70%, rgba(31,139,255,.22), transparent 60%),
-    radial-gradient(circle at 50% 50%, rgba(5,15,35,.65), rgba(2,5,18,.98));
-  box-shadow:
-    0 0 0 1px rgba(0,0,0,0.9),
-    0 0 28px rgba(200, 18, 197, 0.45);
-}
-
-/* Cuervo grande + transparente dentro del LAVA STAGE */
-.cuervo-wm{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  pointer-events:none;
-  opacity: var(--cuervo-opacity);
-  transform: translateY(2px);
-  filter:
-    saturate(1.25)
-    drop-shadow(0 0 calc(var(--cuervo-glow)*1px) rgba(200, 18, 197, .55));
-  mix-blend-mode: screen;
-  animation: cuervoBreath 3.2s ease-in-out infinite;
-}
-
-.cuervo-wm img{
-  width:min(720px, 92%);      /* más grande que antes */
-  max-width:980px;
-  height:auto;
-  opacity:1;
-  transform: translateY(4%);
-  filter: blur(.12px);
-}
-
-/* Shimmer encima del cuervo (solo en Party) */
-.cuervo-wm::after{
-  content:"";
-  position:absolute;
-  inset:-40%;
-  background: linear-gradient(120deg,
-    rgba(255,255,255,0) 40%,
-    rgba(230,180,255,.22) 50%,
-    rgba(255,255,255,0) 60%);
-  transform: translateX(-65%) rotate(10deg);
-  animation: cuervoShimmer 6.5s ease-in-out infinite;
-  opacity:0;
-  mix-blend-mode: screen;
-}
-
-.lava-stage.party .cuervo-wm::after{ opacity:.9; }
-.lava-stage.party{
-  box-shadow:
-    0 0 0 1px rgba(0,0,0,0.9),
-    0 0 46px rgba(200, 18, 197, 0.65),
-    0 0 40px rgba(31, 139, 255, 0.25);
-}
-
-@keyframes cuervoBreath{
-  0%,100%{ transform: scale(0.985); }
-  50%    { transform: scale(1.03); }
-}
-@keyframes cuervoShimmer{
-  0%   { transform: translateX(-65%) rotate(10deg); opacity:0; }
-  18%  { opacity:.75; }
-  50%  { transform: translateX(65%) rotate(10deg); opacity:.25; }
-  100% { transform: translateX(65%) rotate(10deg); opacity:0; }
-}
-
-
-  
-
-  /* Party = más presencia */
-  .viz-wrap.party .cuervo-wm{
-    filter:
-      saturate(1.35)
-      drop-shadow(0 0 calc((var(--cuervo-glow) + 22)*1px) rgba(200, 18, 197, .62));
-  }
-  .viz-wrap.party .cuervo-wm::after{ opacity:.9; }
 
   @keyframes cuervoBreath{
-    0%,100%{ transform: scale(0.985); }
-    50%    { transform: scale(1.03); }
+    0%,100%{ transform: scale(0.99); }
+    50%    { transform: scale(1.04); }
   }
   @keyframes cuervoShimmer{
-    0%   { transform: translateX(-65%) rotate(10deg); opacity:0; }
-    18%  { opacity:.75; }
-    50%  { transform: translateX(65%) rotate(10deg); opacity:.25; }
-    100% { transform: translateX(65%) rotate(10deg); opacity:0; }
+    0%   { transform: translateX(-70%) rotate(12deg); opacity:0; }
+    15%  { opacity:.85; }
+    55%  { transform: translateX(70%) rotate(12deg); opacity:.25; }
+    100% { transform: translateX(70%) rotate(12deg); opacity:0; }
   }
 
   audio{
@@ -463,8 +368,15 @@
 
   label input[type="range"]{ vertical-align:middle; }
   input[type="range"]{ accent-color:var(--accent); }
+
+  /* botón fav mini (misma estética que tus botones) */
+  button.fav{
+    padding:6px 10px;
+    font-size:13px;
+  }
 </style>
 </head>
+
 <body>
 <header>
   <h1>Bapp Radio</h1>
@@ -475,7 +387,7 @@
 </header>
 
 <main>
-  <!-- Columna izquierda: búsqueda + listado (virtual) -->
+  <!-- Izquierda -->
   <section class="card">
     <h2>Listado de emisoras</h2>
     <div class="body">
@@ -491,7 +403,6 @@
         <div class="pill">Favoritos: <span id="favCount">0</span></div>
       </div>
 
-      <!-- Lista virtualizada -->
       <div id="listWrap" class="list-wrap" role="listbox" aria-label="Emisoras">
         <div id="spacer" class="spacer"></div>
         <div id="items" class="items"></div>
@@ -501,7 +412,7 @@
     </div>
   </section>
 
-  <!-- Columna derecha: reproductor + herramientas -->
+  <!-- Derecha -->
   <section class="card">
     <h2>Reproductor</h2>
     <div class="body">
@@ -509,20 +420,20 @@
         Ahora suena: <strong id="nowName">—</strong> <span id="nowGroup" class="muted"></span>
       </div>
 
-      <!-- ✅ NUEVO: envuelto para meter CUERVO LAVA dentro del violeta -->
-      <!-- Equalizer (solo barras) -->
-<div id="vizWrap" class="viz-wrap">
-  <div id="viz" class="viz"></div>
-</div>
+      <!-- Equalizer (barras) -->
+      <div id="vizWrap" class="viz-wrap">
+        <div id="viz" class="viz"></div>
+      </div>
 
-<!-- ✅ LAVA STAGE debajo del equalizer (cuervo grande aquí) -->
-<div id="lavaStage" class="lava-stage" aria-hidden="true">
-  <div id="cuervoWM" class="cuervo-wm">
-    <img src="assets/cuervo-lava.png" alt="">
-  </div>
-</div>
+      <!-- Lava stage (cuervo grande) -->
+      <div id="lavaStage" class="lava-stage" aria-hidden="true">
+        <div class="cuervo-lava">
+          <!-- ✅ pon tu logo aquí -->
+          <img src="assets/cuervo-lava.png" alt="">
+        </div>
+      </div>
 
-      <audio id="audio" controls preload="none"></audio>
+      <audio id="audio" controls preload="none" crossorigin="anonymous"></audio>
 
       <div class="controls" style="margin-top:10px">
         <button id="btnPrev">⏮️ Anterior</button>
@@ -542,7 +453,11 @@
         <button id="btnExportJSON">⬇️ Exportar favoritos .json</button>
       </div>
 
-      <div class="muted" style="margin-top:8px">HLS con <code>hls.js</code> si hace falta. Guarda volumen, última emisora y favoritos.</div>
+      <div class="muted" style="margin-top:8px">
+        HLS con <code>hls.js</code> si hace falta. Guarda volumen, última emisora y favoritos.
+        <br>
+        Nota: el equalizer es real con WebAudio cuando el stream lo permite (algunos streams bloquean por CORS).
+      </div>
     </div>
   </section>
 </main>
@@ -550,10 +465,10 @@
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
 (() => {
-  const DEFAULT_PLAYLIST_URL = 'emisoras de radio.m3u'; // tu archivo
+  const DEFAULT_PLAYLIST_URL = 'emisoras de radio.m3u';
   const BATCH_SIZE = 500;
-  const ITEM_HEIGHT = 72; // px (alto aprox de .item con márgenes)
-  const OVERSCAN = 6;     // ítems extra arriba/abajo
+  const ITEM_HEIGHT = 72;
+  const OVERSCAN = 6;
 
   const LS_LAST_INDEX = 'bapp.radio.lastIndex';
   const LS_FAVORITES  = 'bapp.radio.favorites';
@@ -591,30 +506,27 @@
   const $vol      = document.getElementById('vol');
 
   const $viz      = document.getElementById('viz');
-
-  // ✅ Cuervo / zona violeta
   const $lavaStage = document.getElementById('lavaStage');
-
 
   // Estado
   let isParty = false;
-  let isPlaying = false; // FLAG de reproducción real
+  let isPlaying = false;
   let $playerCard = null;
-  let stations = [];           // {name,url,logo,group, nameL, groupL}
-  let filteredIdx = [];        // índices (sobre stations) tras filtro
+
+  let stations = [];
+  let filteredIdx = [];
   let onlyFavs = false;
   let showLogos = true;
-  let currentFilteredPos = -1; // posición dentro de filteredIdx
+  let currentFilteredPos = -1;
   let hls = null;
 
-  // Equalizador fake (visual)
+  // Visual bars
   let vizBars = [];
-  let vizTimer = null;
 
   const favorites = new Set(JSON.parse(localStorage.getItem(LS_FAVORITES) || '[]'));
   updateFavCount();
 
-  // ---------- Utils ----------
+  // ========= Utils =========
   function encodeUrlMaybe(u){
     try {
       const abs = new URL(u, window.location.href);
@@ -622,6 +534,7 @@
     } catch(_) {}
     return encodeURI(u);
   }
+
   function isFav(url){ return favorites.has(url); }
   function toggleFav(url){
     if(isFav(url)) favorites.delete(url); else favorites.add(url);
@@ -636,32 +549,14 @@
       const p = new URL(u, window.location.href);
       const last = p.pathname.split('/').filter(Boolean).pop() || p.host;
       return decodeURIComponent((last || '').replace(/\.[a-z0-9]+$/i,'')).replace(/[_\-]+/g,' ').trim() || p.host;
-    } catch {
-      return u;
-    }
+    } catch { return u; }
   }
 
-  // ===== Cuervo: reacciona a beat/volumen/party =====
-  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
-
-  function setCuervoReactive(avgLevel){
-    if(!$vizWrap) return;
-    const v = clamp01(Number($audio?.volume ?? 1));
-    const a = clamp01(avgLevel ?? 0);
-
-    // base + volumen + beat
-    const opacity = 0.12 + (v * 0.18) + (a * 0.20) + (isParty ? 0.06 : 0);
-    const glowPx  = 18 + Math.round((v * 26) + (a * 46) + (isParty ? 18 : 0));
-
-    document.documentElement.style.setProperty('--cuervo-opacity', String(opacity.toFixed(3)));
-    document.documentElement.style.setProperty('--cuervo-glow', String(glowPx));
-
-    // clase Party en wrapper para shimmer fuerte
-   $lavaStage?.classList.toggle('party', !!isParty);
-
+  function debounce(fn, wait){
+    let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), wait); };
   }
 
-  // ---------- Worker (stream parser) ----------
+  // ========= Worker (M3U stream parser) =========
   const workerSrc = `
     self.onmessage = async (e) => {
       const { url, batchSize } = e.data;
@@ -694,9 +589,7 @@
             const abs = new URL(u, base);
             const last = abs.pathname.split('/').filter(Boolean).pop() || abs.host;
             return decodeURIComponent((last || '').replace(/\\.[a-z0-9]+$/i,'')).replace(/[_\\-]+/g,' ').trim() || abs.host;
-          }catch{
-            return u;
-          }
+          }catch{ return u; }
         }
 
         function processLines(chunk){
@@ -719,6 +612,7 @@
                 group: (attrs['group-title'] || '').trim()
               };
             } else if(line.startsWith('#')){
+              // ignore
             } else {
               const urlLine = line;
               const name = (pending && pending.name) ? pending.name : guessNameFromUrl(urlLine);
@@ -752,11 +646,7 @@
     };
   `;
 
-  const worker = new Worker(
-    URL.createObjectURL(
-      new Blob([workerSrc], {type:'application/javascript'})
-    )
-  );
+  const worker = new Worker(URL.createObjectURL(new Blob([workerSrc], {type:'application/javascript'})));
 
   worker.onmessage = (e) => {
     const { type } = e.data;
@@ -780,16 +670,14 @@
     }
   };
 
-  // ---------- Filtro + lista virtual ----------
+  // ========= Filtro + Lista Virtual =========
   function computeFilteredIndices(){
     const q = $q.value.toLowerCase().trim();
     const out = [];
     for(let i=0;i<stations.length;i++){
       const s = stations[i];
       if(onlyFavs && !isFav(s.url)) continue;
-      if(!q || s.nameL.includes(q) || s.groupL.includes(q)){
-        out.push(i);
-      }
+      if(!q || s.nameL.includes(q) || s.groupL.includes(q)) out.push(i);
     }
     return out;
   }
@@ -800,9 +688,7 @@
     for(let i=start;i<stations.length;i++){
       const s = stations[i];
       if(onlyFavs && !isFav(s.url)) continue;
-      if(!q || s.nameL.includes(q) || s.groupL.includes(q)){
-        filteredIdx.push(i);
-      }
+      if(!q || s.nameL.includes(q) || s.groupL.includes(q)) filteredIdx.push(i);
     }
     $count.textContent = filteredIdx.length;
     updateVirtual();
@@ -820,10 +706,6 @@
     currentFilteredPos = Math.min(currentFilteredPos, filteredIdx.length-1);
     updateVirtual(true);
   }, 150);
-
-  function debounce(fn, wait){
-    let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), wait); };
-  }
 
   function updateVirtual(resetScroll=false){
     const total = filteredIdx.length;
@@ -902,7 +784,6 @@
       e.stopPropagation();
       toggleFav(s.url);
       favBtn.textContent = isFav(s.url) ? '⭐' : '☆';
-      li.classList.toggle('favItem', isFav(s.url));
     });
 
     li.appendChild(logo);
@@ -928,7 +809,7 @@
     }
   }
 
-  // ---------- Reproductor ----------
+  // ========= Reproductor =========
   function setNow(s){
     $nowName.textContent = s.name || '—';
     $nowGroup.textContent = s.group ? `· ${s.group}` : '';
@@ -958,9 +839,11 @@
         hls = new Hls({enableWorker:true, lowLatencyMode:true});
         hls.loadSource(url);
         hls.attachMedia($audio);
+
         hls.on(Hls.Events.MANIFEST_PARSED, () => { $audio.play().catch(()=>{}); });
         hls.on(Hls.Events.LEVEL_LOADED,    () => { $audio.play().catch(()=>{}); });
         hls.on(Hls.Events.FRAG_BUFFERED,   () => { $audio.play().catch(()=>{}); });
+
         hls.on(Hls.Events.ERROR, (_, data) => {
           if(data.fatal){
             cleanupHls();
@@ -978,7 +861,15 @@
     }
   }
 
-  // ---------- Equalizador visual (fake) + PARTY MODE ----------
+  // ========= Equalizer REAL (WebAudio) + Cuervo Reactivo =========
+  let audioCtx = null;
+  let analyser = null;
+  let srcNode = null;
+  let freqData = null;
+  let rafId = null;
+
+  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+
   function createVizBars(count){
     if(!$viz) return;
     $viz.innerHTML = '';
@@ -991,104 +882,121 @@
     }
   }
 
-  function stopViz(){
-    if(vizTimer){
-      clearInterval(vizTimer);
-      vizTimer = null;
-    }
-    if(vizBars.length){
-      vizBars.forEach(bar=>{
-        bar.style.transform = 'scaleY(0.2)';
-        bar.style.opacity = '0.15';
-      });
-    }
-    if($playerCard && isParty){
-      $playerCard.style.background = '';
-      $playerCard.style.boxShadow = '';
-    }
-    document.documentElement.style.setProperty('--accent-glow', '0.25');
+  function ensureAudioGraph(){
+    if(audioCtx) return true;
+    try{
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 128;
+      analyser.smoothingTimeConstant = 0.80;
 
-    // cuervo baja cuando no suena
-    setCuervoReactive(0);
+      // OJO: algunos streams bloquean por CORS y esto puede fallar:
+      // por eso va en try/catch.
+      srcNode = audioCtx.createMediaElementSource($audio);
+      srcNode.connect(analyser);
+      analyser.connect(audioCtx.destination);
+
+      freqData = new Uint8Array(analyser.frequencyBinCount);
+      return true;
+    }catch(err){
+      // fallback: no analizador real (pero mantenemos animación mínima)
+      analyser = null;
+      freqData = null;
+      return false;
+    }
+  }
+
+  function setCuervoReactive(avgLevel){
+    const v = clamp01(Number($audio?.volume ?? 1));
+    const a = clamp01(avgLevel ?? 0);
+
+    const opacity = 0.20 + (v * 0.20) + (a * 0.25) + (isParty ? 0.10 : 0);
+    const glowPx  = 22 + Math.round((v * 30) + (a * 58) + (isParty ? 22 : 0));
+
+    document.documentElement.style.setProperty('--cuervo-opacity', String(opacity.toFixed(3)));
+    document.documentElement.style.setProperty('--cuervo-glow', String(glowPx));
+
+    $lavaStage?.classList.toggle('party', !!isParty);
+  }
+
+  function renderBars(){
+    let avg = 0;
+
+    if(analyser && freqData){
+      analyser.getByteFrequencyData(freqData);
+
+      const nBars = vizBars.length || 48;
+      const step = Math.max(1, Math.floor(freqData.length / nBars));
+
+      let sum = 0;
+      for(let i=0;i<nBars;i++){
+        const v = freqData[i*step] / 255;
+        sum += v;
+
+        const scale = 0.18 + v * 4.8;
+        const bar = vizBars[i];
+        if(bar){
+          bar.style.transform = `scaleY(${scale})`;
+          bar.style.opacity = (0.18 + v * 0.95).toFixed(2);
+
+          const hue = 190 + v * 90;
+          const light = 38 + v * 34;
+          bar.style.background = `linear-gradient(to top, rgba(5,15,35,0.45), hsl(${hue}, 98%, ${light}%))`;
+        }
+      }
+      avg = sum / nBars;
+
+    } else {
+      // fallback suave (sin analyser)
+      const t = performance.now() / 260;
+      let sum = 0;
+      for(let i=0;i<vizBars.length;i++){
+        const wave = 0.5 + 0.5*Math.sin(t + i*0.35);
+        const v = wave * ($audio.volume || 1) * (isPlaying ? 1 : 0.3);
+        sum += v;
+        const bar = vizBars[i];
+        bar.style.transform = `scaleY(${0.18 + v*3.2})`;
+        bar.style.opacity = (0.16 + v*0.8).toFixed(2);
+      }
+      avg = (sum / vizBars.length) * 0.55;
+    }
+
+    document.documentElement.style.setProperty('--accent-glow', String(0.28 + avg * 1.05));
+    setCuervoReactive(avg);
+
+    rafId = requestAnimationFrame(renderBars);
   }
 
   function startViz(){
     if(!vizBars.length) createVizBars(48);
-    stopViz();
+    const ok = ensureAudioGraph();
+    if(ok && audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
 
-    vizTimer = setInterval(()=>{
-      if(!$audio || !isPlaying){
-        vizBars.forEach(bar=>{
-          bar.style.transform = 'scaleY(0.2)';
-          bar.style.opacity = '0.15';
-        });
-        if($playerCard && isParty){
-          $playerCard.style.background = '';
-          $playerCard.style.boxShadow = '';
-        }
-        document.documentElement.style.setProperty('--accent-glow', '0.25');
-        setCuervoReactive(0);
-        return;
-      }
-
-      const base = ($audio.volume || 1);
-      const t = performance.now() / 160;
-      let levelSum = 0;
-
-      vizBars.forEach((bar, i)=>{
-        const n = vizBars.length;
-        const centerFactor = 0.6 + Math.sin((i / (n-1)) * Math.PI) * 0.9;
-        const wave = 0.5 + 0.5*Math.sin((i*0.35) + t);
-        const noise = Math.random()*0.7 + 0.3;
-        const raw = (noise * wave * centerFactor * base) * 1.4;
-        const norm = Math.min(1, raw);
-        levelSum += norm;
-
-        const scale = 0.1 + norm * 4.8;
-        bar.style.transform = `scaleY(${scale})`;
-        bar.style.opacity   = 0.2 + norm * 0.9;
-
-        const hue = 190 + norm * 90;
-        const light = 40 + norm * 30;
-        bar.style.background = `linear-gradient(to top, rgba(5,15,35,0.45), hsl(${hue}, 98%, ${light}%))`;
-      });
-
-      const avg = levelSum / vizBars.length;
-
-      // ✅ cuervo reacciona a beat promedio
-      setCuervoReactive(avg);
-
-      document.documentElement.style.setProperty('--accent-glow', String(0.35 + avg * 0.9));
-
-      if(isParty && $playerCard){
-        const strength = Math.min(1, avg * 1.6);
-        const hueBase = 210 + strength * 40;
-        const sat = 70 + strength * 25;
-        const light1 = 10 + strength * 15;
-        const light2 = 22 + strength * 28;
-
-        $playerCard.style.background =
-          `linear-gradient(135deg, hsl(${hueBase}, ${sat}%, ${light1}%), hsl(${hueBase+15}, ${sat}%, ${light2}%))`;
-
-        const glow = 0.4 + strength * 1.3;
-        $playerCard.style.boxShadow =
-          `0 18px 35px rgba(0,0,0,0.7),
-           0 0 0 1px rgba(10,40,80,0.7),
-           0 0 40px rgba(31,139,255,${glow})`;
-      }
-    }, 50);
+    if(rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(renderBars);
   }
 
-  // ---------- Listeners de reproducción (confiables) ----------
-  $audio.addEventListener('playing', () => { isPlaying = true; startViz(); });
+  function stopViz(){
+    if(rafId){
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+    vizBars.forEach(b=>{
+      b.style.transform = 'scaleY(0.20)';
+      b.style.opacity = '0.15';
+    });
+    document.documentElement.style.setProperty('--accent-glow', '0.25');
+    setCuervoReactive(0);
+  }
+
+  // Eventos audio
+  $audio.addEventListener('play',    () => { isPlaying = true;  startViz(); });
+  $audio.addEventListener('playing', () => { isPlaying = true;  startViz(); });
   $audio.addEventListener('pause',   () => { isPlaying = false; stopViz(); });
   $audio.addEventListener('ended',   () => { isPlaying = false; stopViz(); });
-  $audio.addEventListener('waiting', () => { isPlaying = false; });
-  $audio.addEventListener('stalled', () => { isPlaying = false; });
-  $audio.addEventListener('suspend', () => { isPlaying = false; });
-  $audio.addEventListener('emptied', () => { isPlaying = false; });
+  $audio.addEventListener('emptied', () => { isPlaying = false; stopViz(); });
 
-  // ---------- Restaurar última ----------
+  // ========= Restore last =========
   function restoreLast(){
     const savedAbs = Number(localStorage.getItem(LS_LAST_INDEX));
     if(Number.isFinite(savedAbs)){
@@ -1107,7 +1015,7 @@
     }
   }
 
-  // ---------- Export favoritos ----------
+  // ========= Export =========
   function exportM3U(){
     const lines = ['#EXTM3U'];
     for(const url of favorites){
@@ -1121,6 +1029,7 @@
     }
     downloadBlob(lines.join('\n'), 'favoritos.m3u', 'audio/x-mpegurl');
   }
+
   function exportJSON(){
     const out = [];
     for(const url of favorites){
@@ -1129,6 +1038,7 @@
     }
     downloadBlob(JSON.stringify(out, null, 2), 'favoritos.json', 'application/json');
   }
+
   function downloadBlob(text, filename, mime){
     const blob = new Blob([text], {type: mime});
     const a = document.createElement('a');
@@ -1139,16 +1049,22 @@
     setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 0);
   }
 
-  // ---------- Controles ----------
-  $btnPlay.addEventListener('click', () => $audio.play().catch(()=>{}));
+  // ========= Controles =========
+  $btnPlay.addEventListener('click', () => {
+    // gesto usuario: resume audioCtx si existe
+    if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
+    $audio.play().catch(()=>{});
+  });
+
   $btnPause.addEventListener('click', () => $audio.pause());
-  $btnStop.addEventListener('click', () => { $audio.pause(); $audio.currentTime = 0; });
+  $btnStop.addEventListener('click', () => { $audio.pause(); try{$audio.currentTime=0;}catch(_){} });
 
   $btnPrev.addEventListener('click', () => {
     if(!filteredIdx.length) return;
     currentFilteredPos = (currentFilteredPos - 1 + filteredIdx.length) % filteredIdx.length;
     playByAbsoluteIndex(filteredIdx[currentFilteredPos]);
   });
+
   $btnNext.addEventListener('click', () => {
     if(!filteredIdx.length) return;
     currentFilteredPos = (currentFilteredPos + 1) % filteredIdx.length;
@@ -1159,8 +1075,7 @@
     const val = Number($vol.value);
     $audio.volume = val;
     localStorage.setItem(LS_VOLUME, String(val));
-
-    // ✅ cuervo responde inmediatamente al volumen aunque no haya beat
+    // reacción inmediata del cuervo
     setCuervoReactive(isPlaying ? 0.25 : 0);
   });
 
@@ -1174,18 +1089,8 @@
   $btnParty.addEventListener('click', () => {
     isParty = !isParty;
     $btnParty.classList.toggle('party-on', isParty);
-    if(isParty){
-      $btnParty.textContent = '🌈 Party ON';
-    } else {
-      $btnParty.textContent = '🌈 Party';
-      if($playerCard){
-        $playerCard.style.background = '';
-        $playerCard.style.boxShadow = '';
-      }
-      document.documentElement.style.setProperty('--accent-glow', '0.25');
-    }
-    // ✅ aplica clase party a la zona violeta del cuervo
-    setCuervoReactive(isPlaying ? 0.25 : 0);
+    $btnParty.textContent = isParty ? '🌈 Party ON' : '🌈 Party';
+    setCuervoReactive(isPlaying ? 0.35 : 0);
   });
 
   $btnExportM3U.addEventListener('click', exportM3U);
@@ -1197,7 +1102,7 @@
     updateVirtual();
   });
 
-  // ---------- Inicio ----------
+  // ========= Inicio =========
   function startLoad(){
     stations = [];
     filteredIdx = [];
@@ -1211,6 +1116,7 @@
     worker.postMessage({ url: src, batchSize: BATCH_SIZE });
   }
 
+  // volumen/logos previos
   const vPrev = Number(localStorage.getItem(LS_VOLUME));
   if(Number.isFinite(vPrev)){
     $vol.value = vPrev;
@@ -1228,8 +1134,6 @@
     createVizBars(48);
     const cards = document.querySelectorAll('.card');
     if (cards.length > 1) $playerCard = cards[1];
-
-    // set cuervo base
     setCuervoReactive(0);
   });
 
@@ -1238,4 +1142,5 @@
 
 </body>
 </html>
+
 
