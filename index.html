@@ -356,6 +356,86 @@
     mix-blend-mode: screen;
   }
 
+/* ===== LAVA STAGE (espacio debajo del equalizer) ===== */
+.lava-stage{
+  position:relative;
+  height:140px;              /* ajusta si quieres más grande */
+  margin:10px 0 8px;
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid rgba(110, 30, 33, 0.65);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(200,18,197,.28), transparent 55%),
+    radial-gradient(circle at 80% 70%, rgba(31,139,255,.22), transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(5,15,35,.65), rgba(2,5,18,.98));
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.9),
+    0 0 28px rgba(200, 18, 197, 0.45);
+}
+
+/* Cuervo grande + transparente dentro del LAVA STAGE */
+.cuervo-wm{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  opacity: var(--cuervo-opacity);
+  transform: translateY(2px);
+  filter:
+    saturate(1.25)
+    drop-shadow(0 0 calc(var(--cuervo-glow)*1px) rgba(200, 18, 197, .55));
+  mix-blend-mode: screen;
+  animation: cuervoBreath 3.2s ease-in-out infinite;
+}
+
+.cuervo-wm img{
+  width:min(720px, 92%);      /* más grande que antes */
+  max-width:980px;
+  height:auto;
+  opacity:1;
+  transform: translateY(4%);
+  filter: blur(.12px);
+}
+
+/* Shimmer encima del cuervo (solo en Party) */
+.cuervo-wm::after{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background: linear-gradient(120deg,
+    rgba(255,255,255,0) 40%,
+    rgba(230,180,255,.22) 50%,
+    rgba(255,255,255,0) 60%);
+  transform: translateX(-65%) rotate(10deg);
+  animation: cuervoShimmer 6.5s ease-in-out infinite;
+  opacity:0;
+  mix-blend-mode: screen;
+}
+
+.lava-stage.party .cuervo-wm::after{ opacity:.9; }
+.lava-stage.party{
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.9),
+    0 0 46px rgba(200, 18, 197, 0.65),
+    0 0 40px rgba(31, 139, 255, 0.25);
+}
+
+@keyframes cuervoBreath{
+  0%,100%{ transform: scale(0.985); }
+  50%    { transform: scale(1.03); }
+}
+@keyframes cuervoShimmer{
+  0%   { transform: translateX(-65%) rotate(10deg); opacity:0; }
+  18%  { opacity:.75; }
+  50%  { transform: translateX(65%) rotate(10deg); opacity:.25; }
+  100% { transform: translateX(65%) rotate(10deg); opacity:0; }
+}
+
+
+  
+
   /* Party = más presencia */
   .viz-wrap.party .cuervo-wm{
     filter:
@@ -430,14 +510,17 @@
       </div>
 
       <!-- ✅ NUEVO: envuelto para meter CUERVO LAVA dentro del violeta -->
-      <div id="vizWrap" class="viz-wrap">
-        <div id="viz" class="viz"></div>
+      <!-- Equalizer (solo barras) -->
+<div id="vizWrap" class="viz-wrap">
+  <div id="viz" class="viz"></div>
+</div>
 
-        <!-- Cuervo Lava watermark -->
-        <div id="cuervoWM" class="cuervo-wm" aria-hidden="true">
-          <img src="assets/cuervo-lava.png" alt="">
-        </div>
-      </div>
+<!-- ✅ LAVA STAGE debajo del equalizer (cuervo grande aquí) -->
+<div id="lavaStage" class="lava-stage" aria-hidden="true">
+  <div id="cuervoWM" class="cuervo-wm">
+    <img src="assets/cuervo-lava.png" alt="">
+  </div>
+</div>
 
       <audio id="audio" controls preload="none"></audio>
 
@@ -510,7 +593,8 @@
   const $viz      = document.getElementById('viz');
 
   // ✅ Cuervo / zona violeta
-  const $vizWrap  = document.getElementById('vizWrap');
+  const $lavaStage = document.getElementById('lavaStage');
+
 
   // Estado
   let isParty = false;
@@ -573,7 +657,8 @@
     document.documentElement.style.setProperty('--cuervo-glow', String(glowPx));
 
     // clase Party en wrapper para shimmer fuerte
-    $vizWrap.classList.toggle('party', !!isParty);
+   $lavaStage?.classList.toggle('party', !!isParty);
+
   }
 
   // ---------- Worker (stream parser) ----------
