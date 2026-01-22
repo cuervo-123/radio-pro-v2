@@ -9,6 +9,7 @@
 <style>
   :root{
     color-scheme: dark;
+
     /* PALETA AZUL METÁLICA */
     --bg:#020512;
     --bg-soft:#050a1f;
@@ -21,9 +22,13 @@
     --muted:#8ea3b0;
     --accent-glow:0.25;
 
+    /* PARTY VIOLETA */
+    --violet:#c812c5;
+    --violet2:#7c3aed;
+
     /* CUERVO */
-    --cuervo-opacity: .22;   /* base visible */
-    --cuervo-glow: 22;       /* px */
+    --cuervo-opacity: .20;
+    --cuervo-glow: 20; /* px */
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
@@ -161,8 +166,9 @@
   button.party-on{
     border-color: var(--accent-strong);
     box-shadow:
-      0 0 16px rgba(255,255,255,0.5),
-      0 0 32px rgba(31,139,255,0.9);
+      0 0 16px rgba(255,255,255,0.45),
+      0 0 32px rgba(31,139,255,0.9),
+      0 0 28px rgba(200,18,197,0.55);
     background: radial-gradient(circle at top, #1f8bff, #050a1d);
   }
 
@@ -178,10 +184,9 @@
     box-shadow:0 0 0 1px rgba(0,0,0,0.8);
   }
   .pill strong{color:var(--accent-strong);}
-
   .muted{ color:var(--muted); font-size:12px; }
 
-  /* LISTA VIRTUALIZADA */
+  /* LISTA */
   .list-wrap{
     height:70vh;
     border:1px solid rgba(40,70,120,0.9);
@@ -211,11 +216,7 @@
     border-radius:12px;
     background:radial-gradient(circle at top left,#071226,#050912);
     margin:6px 8px;
-    transition:
-      border-color .16s ease,
-      box-shadow .16s ease,
-      background .16s ease,
-      transform .1s ease;
+    transition: border-color .16s ease, box-shadow .16s ease, background .16s ease, transform .1s ease;
   }
   .item:hover{
     border-color:rgba(80,130,200,0.9);
@@ -229,15 +230,10 @@
   }
 
   .logo{
-    width:44px;
-    height:44px;
-    border-radius:10px;
-    object-fit:cover;
+    width:44px;height:44px;border-radius:10px;object-fit:cover;
     background:radial-gradient(circle at 30% 30%,#1f8bff,#020615);
     border:1px solid #172236;
-    display:grid;
-    place-items:center;
-    font-size:18px;
+    display:grid;place-items:center;font-size:18px;
     box-shadow:0 0 10px rgba(10,50,100,0.8);
   }
 
@@ -246,21 +242,13 @@
   .group{font-size:12px;color:var(--muted)}
 
   .now{
-    font-size:14px;
-    color:#d6f7ff;
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-    align-items:center;
+    font-size:14px;color:#d6f7ff;
+    display:flex;flex-wrap:wrap;gap:6px;align-items:center;
   }
   #nowName{ color:var(--accent-strong); }
 
-  .controls{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-  }
-  .controls .grow{flex:1}
+  .controls{ display:flex; gap:10px; flex-wrap:wrap; }
+  .controls .grow{ flex:1 }
 
   /* ===== Equalizer (barras) ===== */
   .viz-wrap{
@@ -271,19 +259,25 @@
     background:radial-gradient(circle at top,#040b18,#02040b);
     box-shadow:
       0 0 0 1px rgba(0,0,0,0.9),
-      0 0 22px rgba(200, 18, 197, 0.7);
+      0 0 22px rgba(200, 18, 197, 0.55);
     padding:6px 10px;
+    position:relative;
   }
-  .viz{
-    height:60px;
-    display:flex;
-    align-items:flex-end;
-    gap:3px;
+  .viz-wrap.party{
+    border-color: rgba(200,18,197,0.85);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.9),
+      0 0 18px rgba(31,139,255,0.45),
+      0 0 42px rgba(200,18,197,0.75);
+    background:
+      radial-gradient(circle at 20% 40%, rgba(200,18,197,.20), transparent 60%),
+      radial-gradient(circle at 80% 60%, rgba(124,58,237,.14), transparent 65%),
+      radial-gradient(circle at top,#040b18,#02040b);
   }
+
+  .viz{ height:60px; display:flex; align-items:flex-end; gap:3px; }
   .viz .bar{
-    flex:1;
-    min-width:3px;
-    border-radius:999px;
+    flex:1; min-width:3px; border-radius:999px;
     background: linear-gradient(to top, #0e2a55, #4ac3ff);
     transform-origin:bottom;
     transform:scaleY(.20);
@@ -292,21 +286,37 @@
     will-change: transform, opacity;
   }
 
-  /* ===== LAVA STAGE: cuervo grande debajo ===== */
+  /* ===== LAVA STAGE (más grande) ===== */
   .lava-stage{
-    height:96px;
+    height:190px;               /* ✅ MÁS GRANDE */
     margin:10px 0 8px;
-    border-radius:16px;
+    border-radius:18px;
     overflow:hidden;
     position:relative;
     border:1px solid rgba(110, 30, 33, 0.55);
     background:
-      radial-gradient(circle at 15% 35%, rgba(200,18,197,.22), transparent 60%),
-      radial-gradient(circle at 85% 60%, rgba(31,139,255,.14), transparent 62%),
+      radial-gradient(circle at 15% 35%, rgba(200,18,197,.18), transparent 62%),
+      radial-gradient(circle at 85% 60%, rgba(31,139,255,.12), transparent 62%),
       linear-gradient(180deg, rgba(2,6,18,.95), rgba(2,5,14,.98));
     box-shadow:
       0 0 0 1px rgba(0,0,0,0.9),
-      0 0 26px rgba(200, 18, 197, 0.38);
+      0 0 22px rgba(31,139,255,0.25),
+      0 0 26px rgba(200, 18, 197, 0.28);
+  }
+
+  /* ✅ PARTY VIOLETA EN LAVA STAGE */
+  .lava-stage.party{
+    border-color: rgba(200,18,197,0.9);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.9),
+      0 0 28px rgba(31,139,255,0.35),
+      0 0 56px rgba(200,18,197,0.75),
+      0 0 32px rgba(124,58,237,0.35);
+    background:
+      radial-gradient(circle at 20% 25%, rgba(200,18,197,.26), transparent 58%),
+      radial-gradient(circle at 80% 70%, rgba(124,58,237,.18), transparent 62%),
+      radial-gradient(circle at 50% 50%, rgba(31,139,255,.10), transparent 70%),
+      linear-gradient(180deg, rgba(2,6,18,.94), rgba(2,5,14,.98));
   }
 
   .cuervo-lava{
@@ -319,32 +329,33 @@
     opacity: var(--cuervo-opacity);
     mix-blend-mode: normal;
     filter:
-      contrast(1.12)
+      contrast(1.10)
       saturate(1.25)
-      drop-shadow(0 0 calc(var(--cuervo-glow)*1px) rgba(200, 18, 197, .65))
-      drop-shadow(0 0 18px rgba(31,139,255,.20));
-    transform: translateY(2px);
+      drop-shadow(0 0 calc(var(--cuervo-glow)*1px) rgba(200, 18, 197, .70))
+      drop-shadow(0 0 18px rgba(31,139,255,.18));
+    transform: translateY(4px);
     animation: cuervoBreath 3.0s ease-in-out infinite;
   }
 
+  /* ✅ LOGO MÁS PEQUEÑO (y con límite) */
   .cuervo-lava img{
-    width:min(560px, 92%);
-    max-width:720px;
+    width: min(420px, 78%);   /* ✅ más pequeño */
+    max-width: 520px;
     height:auto;
     opacity:1;
-    transform: translateY(4%);
+    transform: translateY(2%);
   }
 
   .lava-stage.party .cuervo-lava::after{
     content:"";
     position:absolute;
-    inset:-50%;
+    inset:-55%;
     background: linear-gradient(120deg,
       rgba(255,255,255,0) 42%,
-      rgba(230,180,255,.18) 50%,
+      rgba(230,180,255,.22) 50%,
       rgba(255,255,255,0) 58%);
-    transform: translateX(-70%) rotate(12deg);
-    animation: cuervoShimmer 5.8s ease-in-out infinite;
+    transform: translateX(-72%) rotate(12deg);
+    animation: cuervoShimmer 5.6s ease-in-out infinite;
     mix-blend-mode: screen;
     opacity:1;
   }
@@ -354,10 +365,10 @@
     50%    { transform: scale(1.04); }
   }
   @keyframes cuervoShimmer{
-    0%   { transform: translateX(-70%) rotate(12deg); opacity:0; }
-    15%  { opacity:.85; }
-    55%  { transform: translateX(70%) rotate(12deg); opacity:.25; }
-    100% { transform: translateX(70%) rotate(12deg); opacity:0; }
+    0%   { transform: translateX(-72%) rotate(12deg); opacity:0; }
+    15%  { opacity:.90; }
+    55%  { transform: translateX(72%) rotate(12deg); opacity:.25; }
+    100% { transform: translateX(72%) rotate(12deg); opacity:0; }
   }
 
   audio{
@@ -369,11 +380,7 @@
   label input[type="range"]{ vertical-align:middle; }
   input[type="range"]{ accent-color:var(--accent); }
 
-  /* botón fav mini (misma estética que tus botones) */
-  button.fav{
-    padding:6px 10px;
-    font-size:13px;
-  }
+  button.fav{ padding:6px 10px; font-size:13px; }
 </style>
 </head>
 
@@ -420,15 +427,12 @@
         Ahora suena: <strong id="nowName">—</strong> <span id="nowGroup" class="muted"></span>
       </div>
 
-      <!-- Equalizer (barras) -->
       <div id="vizWrap" class="viz-wrap">
         <div id="viz" class="viz"></div>
       </div>
 
-      <!-- Lava stage (cuervo grande) -->
       <div id="lavaStage" class="lava-stage" aria-hidden="true">
         <div class="cuervo-lava">
-          <!-- ✅ pon tu logo aquí -->
           <img src="assets/cuervo-lava.png" alt="">
         </div>
       </div>
@@ -454,9 +458,7 @@
       </div>
 
       <div class="muted" style="margin-top:8px">
-        HLS con <code>hls.js</code> si hace falta. Guarda volumen, última emisora y favoritos.
-        <br>
-        Nota: el equalizer es real con WebAudio cuando el stream lo permite (algunos streams bloquean por CORS).
+        Equalizer real (WebAudio) cuando el stream lo permite. Party ahora prende luz violeta en el LAVA + en el contenedor del equalizer.
       </div>
     </div>
   </section>
@@ -505,13 +507,13 @@
   const $btnExportJSON= document.getElementById('btnExportJSON');
   const $vol      = document.getElementById('vol');
 
+  const $vizWrap  = document.getElementById('vizWrap');
   const $viz      = document.getElementById('viz');
-  const $lavaStage = document.getElementById('lavaStage');
+  const $lavaStage= document.getElementById('lavaStage');
 
   // Estado
   let isParty = false;
   let isPlaying = false;
-  let $playerCard = null;
 
   let stations = [];
   let filteredIdx = [];
@@ -528,13 +530,9 @@
 
   // ========= Utils =========
   function encodeUrlMaybe(u){
-    try {
-      const abs = new URL(u, window.location.href);
-      if (/^https?:/i.test(abs.protocol)) return abs.href;
-    } catch(_) {}
+    try { const abs = new URL(u, window.location.href); if(/^https?:/i.test(abs.protocol)) return abs.href; } catch(_) {}
     return encodeURI(u);
   }
-
   function isFav(url){ return favorites.has(url); }
   function toggleFav(url){
     if(isFav(url)) favorites.delete(url); else favorites.add(url);
@@ -545,7 +543,7 @@
   function updateFavCount(){ $favCount.textContent = favorites.size; }
 
   function guessNameFromUrl(u){
-    try {
+    try{
       const p = new URL(u, window.location.href);
       const last = p.pathname.split('/').filter(Boolean).pop() || p.host;
       return decodeURIComponent((last || '').replace(/\.[a-z0-9]+$/i,'')).replace(/[_\-]+/g,' ').trim() || p.host;
@@ -556,7 +554,7 @@
     let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), wait); };
   }
 
-  // ========= Worker (M3U stream parser) =========
+  // ========= Worker (M3U parser) =========
   const workerSrc = `
     self.onmessage = async (e) => {
       const { url, batchSize } = e.data;
@@ -612,7 +610,6 @@
                 group: (attrs['group-title'] || '').trim()
               };
             } else if(line.startsWith('#')){
-              // ignore
             } else {
               const urlLine = line;
               const name = (pending && pending.name) ? pending.name : guessNameFromUrl(urlLine);
@@ -645,7 +642,6 @@
       }
     };
   `;
-
   const worker = new Worker(URL.createObjectURL(new Blob([workerSrc], {type:'application/javascript'})));
 
   worker.onmessage = (e) => {
@@ -861,7 +857,7 @@
     }
   }
 
-  // ========= Equalizer REAL (WebAudio) + Cuervo Reactivo =========
+  // ========= Equalizer REAL (WebAudio) =========
   let audioCtx = null;
   let analyser = null;
   let srcNode = null;
@@ -890,8 +886,6 @@
       analyser.fftSize = 128;
       analyser.smoothingTimeConstant = 0.80;
 
-      // OJO: algunos streams bloquean por CORS y esto puede fallar:
-      // por eso va en try/catch.
       srcNode = audioCtx.createMediaElementSource($audio);
       srcNode.connect(analyser);
       analyser.connect(audioCtx.destination);
@@ -899,7 +893,6 @@
       freqData = new Uint8Array(analyser.frequencyBinCount);
       return true;
     }catch(err){
-      // fallback: no analizador real (pero mantenemos animación mínima)
       analyser = null;
       freqData = null;
       return false;
@@ -911,12 +904,14 @@
     const a = clamp01(avgLevel ?? 0);
 
     const opacity = 0.20 + (v * 0.20) + (a * 0.25) + (isParty ? 0.10 : 0);
-    const glowPx  = 22 + Math.round((v * 30) + (a * 58) + (isParty ? 22 : 0));
+    const glowPx  = 18 + Math.round((v * 24) + (a * 52) + (isParty ? 26 : 0));
 
     document.documentElement.style.setProperty('--cuervo-opacity', String(opacity.toFixed(3)));
     document.documentElement.style.setProperty('--cuervo-glow', String(glowPx));
 
-    $lavaStage?.classList.toggle('party', !!isParty);
+    // ✅ Party class en lava y también en el equalizer wrapper
+    $lavaStage.classList.toggle('party', !!isParty);
+    $vizWrap.classList.toggle('party', !!isParty);
   }
 
   function renderBars(){
@@ -945,9 +940,7 @@
         }
       }
       avg = sum / nBars;
-
     } else {
-      // fallback suave (sin analyser)
       const t = performance.now() / 260;
       let sum = 0;
       for(let i=0;i<vizBars.length;i++){
@@ -963,7 +956,6 @@
 
     document.documentElement.style.setProperty('--accent-glow', String(0.28 + avg * 1.05));
     setCuervoReactive(avg);
-
     rafId = requestAnimationFrame(renderBars);
   }
 
@@ -971,7 +963,6 @@
     if(!vizBars.length) createVizBars(48);
     const ok = ensureAudioGraph();
     if(ok && audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
-
     if(rafId) cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(renderBars);
   }
@@ -989,7 +980,6 @@
     setCuervoReactive(0);
   }
 
-  // Eventos audio
   $audio.addEventListener('play',    () => { isPlaying = true;  startViz(); });
   $audio.addEventListener('playing', () => { isPlaying = true;  startViz(); });
   $audio.addEventListener('pause',   () => { isPlaying = false; stopViz(); });
@@ -1051,11 +1041,9 @@
 
   // ========= Controles =========
   $btnPlay.addEventListener('click', () => {
-    // gesto usuario: resume audioCtx si existe
     if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
     $audio.play().catch(()=>{});
   });
-
   $btnPause.addEventListener('click', () => $audio.pause());
   $btnStop.addEventListener('click', () => { $audio.pause(); try{$audio.currentTime=0;}catch(_){} });
 
@@ -1075,7 +1063,6 @@
     const val = Number($vol.value);
     $audio.volume = val;
     localStorage.setItem(LS_VOLUME, String(val));
-    // reacción inmediata del cuervo
     setCuervoReactive(isPlaying ? 0.25 : 0);
   });
 
@@ -1116,7 +1103,6 @@
     worker.postMessage({ url: src, batchSize: BATCH_SIZE });
   }
 
-  // volumen/logos previos
   const vPrev = Number(localStorage.getItem(LS_VOLUME));
   if(Number.isFinite(vPrev)){
     $vol.value = vPrev;
@@ -1132,8 +1118,6 @@
   window.addEventListener('DOMContentLoaded', () => {
     startLoad();
     createVizBars(48);
-    const cards = document.querySelectorAll('.card');
-    if (cards.length > 1) $playerCard = cards[1];
     setCuervoReactive(0);
   });
 
@@ -1142,5 +1126,6 @@
 
 </body>
 </html>
+
 
 
