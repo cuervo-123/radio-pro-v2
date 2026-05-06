@@ -182,17 +182,6 @@
       border:1px dashed #294060;border-radius:14px;padding:18px;
       text-align:center;color:#9fb1cb;background:#0e1523
     }
-
-    .series-panel{margin-top:14px;padding:12px;border:1px solid #22344f;background:#0e1523;border-radius:14px}
-    .series-panel summary{cursor:pointer;font-weight:800;color:#cfe0ff;list-style:none}
-    .series-panel summary::-webkit-details-marker{display:none}
-    .series-grid{display:grid;gap:10px;margin-top:10px}
-    .series-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .series-label{font-size:12px;color:var(--muted);min-width:72px}
-    .series-btn,.episode-link{display:inline-flex;align-items:center;justify-content:center;min-width:42px;padding:7px 10px;border-radius:999px;border:1px solid #2a3850;background:#0f1726;color:#dbe5f6;text-decoration:none;font-size:12px;font-weight:700;cursor:pointer}
-    .series-monitor-select{height:34px;min-width:86px;background:#0f1726;color:#dbe5f6;border:1px solid #233044;border-radius:10px;padding:0 10px;font-weight:700}
-    .series-btn.active{background:#16304f;border-color:#2ea7ff;color:#fff}
-    .episode-link:hover,.series-btn:hover{border-color:#3b557f;transform:translateY(-1px)}
     .footer-note{font-size:12px;color:#9fb1cb;margin-top:10px}
 
     @media (max-width: 980px){
@@ -226,15 +215,6 @@
       <button class="btn primary" id="btnGenerate">Generar tarjeta</button>
       <button class="btn ok" id="btnSaveCurrent">⭐ Guardar actual</button>
       <button class="btn blue" id="btnOpenDB">🗂️ Abrir database</button>
-      <div class="switch" style="display:inline-flex;align-items:center;gap:8px">
-        <span>Monitor episodio:</span>
-        <select id="episodeMonitor" style="height:40px;background:#0f1726;color:#dbe5f6;border:1px solid #233044;border-radius:10px;padding:0 10px">
-          <option value="m1">M1</option>
-          <option value="m2">M2</option>
-          <option value="m3">M3</option>
-          <option value="m4">M4</option>
-        </select>
-      </div>
       <div class="switch" style="display:inline-flex;align-items:center;gap:8px">
         <span>Tamaño tarjetas:</span>
         <button class="btn ghost" data-size="sm">S</button>
@@ -306,10 +286,12 @@
       <div class="stage" id="stage-m1">
         <div style="opacity:.65;text-align:center;padding:12px">
           <div style="font-weight:700">Sin reproducción</div>
-          <div class="hint">Usa “Play M1” en una tarjeta o los episodios de series.</div>
+          <div class="hint">Usa “Play M1” en una tarjeta o pega un link abajo.</div>
         </div>
       </div>
       <div class="mon-ctrls">
+        <input id="url-m1" placeholder="Pega URL (embed, página, .m3u8)" style="flex:1;min-width:180px;height:40px;background:#0f1726;color:#dbe5f6;border:1px solid #233044;border-radius:10px;padding:0 10px">
+        <button class="btn primary" data-act="play" data-target="m1">▶ Reproducir</button>
         <button class="btn" data-act="fs" data-target="m1">⛶ Fullscreen</button>
         <button class="btn" data-act="stop" data-target="m1">⏹ Detener</button>
         <a class="btn" data-act="pop" data-target="m1">↗ Pop-out</a>
@@ -321,6 +303,8 @@
       <h3>🖥️ Monitor 2</h3>
       <div class="stage" id="stage-m2"><div style="opacity:.65;text-align:center;padding:12px"><b>Sin reproducción</b></div></div>
       <div class="mon-ctrls">
+        <input id="url-m2" placeholder="Pega URL (embed, página, .m3u8)" style="flex:1;min-width:180px;height:40px;background:#0f1726;color:#dbe5f6;border:1px solid #233044;border-radius:10px;padding:0 10px">
+        <button class="btn primary" data-act="play" data-target="m2">▶ Reproducir</button>
         <button class="btn" data-act="fs" data-target="m2">⛶ Fullscreen</button>
         <button class="btn" data-act="stop" data-target="m2">⏹ Detener</button>
         <a class="btn" data-act="pop" data-target="m2">↗ Pop-out</a>
@@ -332,6 +316,8 @@
       <h3>🖥️ Monitor 3</h3>
       <div class="stage" id="stage-m3"><div style="opacity:.65;text-align:center;padding:12px"><b>Sin reproducción</b></div></div>
       <div class="mon-ctrls">
+        <input id="url-m3" placeholder="Pega URL (embed, página, .m3u8)" style="flex:1;min-width:180px;height:40px;background:#0f1726;color:#dbe5f6;border:1px solid #233044;border-radius:10px;padding:0 10px">
+        <button class="btn primary" data-act="play" data-target="m3">▶ Reproducir</button>
         <button class="btn" data-act="fs" data-target="m3">⛶ Fullscreen</button>
         <button class="btn" data-act="stop" data-target="m3">⏹ Detener</button>
         <a class="btn" data-act="pop" data-target="m3">↗ Pop-out</a>
@@ -343,6 +329,8 @@
       <h3>🖥️ Monitor 4</h3>
       <div class="stage" id="stage-m4"><div style="opacity:.65;text-align:center;padding:12px"><b>Sin reproducción</b></div></div>
       <div class="mon-ctrls">
+        <input id="url-m4" placeholder="Pega URL (embed, página, .m3u8)" style="flex:1;min-width:180px;height:40px;background:#0f1726;color:#dbe5f6;border:1px solid #233044;border-radius:10px;padding:0 10px">
+        <button class="btn primary" data-act="play" data-target="m4">▶ Reproducir</button>
         <button class="btn" data-act="fs" data-target="m4">⛶ Fullscreen</button>
         <button class="btn" data-act="stop" data-target="m4">⏹ Detener</button>
         <a class="btn" data-act="pop" data-target="m4">↗ Pop-out</a>
@@ -369,13 +357,6 @@
           </div>
 
           <div class="field">
-            <label>Proveedor</label>
-            <select id="fProvider">
-              <option value="videasy">Videasy</option>
-              <option value="popcornflix">Popcornflix</option>
-            </select>
-          </div>
-          <div class="field">
             <label>Tipo</label>
             <select id="fVideoType">
               <option value="movie">Movies</option>
@@ -383,8 +364,8 @@
             </select>
           </div>
           <div class="field">
-            <label>ID de contenido</label>
-            <input id="fTMDB" placeholder="1178602 o 10595728">
+            <label>TMDB ID</label>
+            <input id="fTMDB" placeholder="1178602">
           </div>
           <div class="field">
             <label>Season</label>
@@ -395,23 +376,12 @@
             <input id="fEpisode" type="number" min="1" step="1" value="1" placeholder="1">
           </div>
           <div class="field" style="grid-column:1/-1">
-            <label>Generador por proveedor</label>
+            <label>Generador Videasy</label>
             <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <button class="btn blue" id="btnVideasyBuild" type="button">⚡ Generar desde proveedor + tipo + ID</button>
+              <button class="btn blue" id="btnVideasyBuild" type="button">⚡ Generar desde Movies / Series + ID</button>
               <button class="btn ghost" id="btnVideasyOnlyLink" type="button">🔗 Solo construir link</button>
             </div>
-            <small>Elige proveedor, tipo y escribe el ID. Videasy soporta Movies/Series. Popcornflix genera links tipo película por ID. En las tarjetas de series se cargan además 10 seasons y 10 episodes por default con sus links.</small>
-          </div>
-
-          <div class="field" style="grid-column:1/-1">
-            <label>Generador por rango</label>
-            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,180px)) auto;gap:10px;align-items:end">
-              <input id="fRangeStart" type="number" min="1" step="1" value="1" placeholder="Desde ID">
-              <input id="fRangeEnd" type="number" min="1" step="1" value="20" placeholder="Hasta ID">
-              <input id="fRangeLimit" type="number" min="1" step="1" value="20" placeholder="Máx tarjetas">
-              <button class="btn warn" id="btnVideasyRange" type="button">🧩 Generar rango</button>
-            </div>
-            <small>Ejemplo: del 1 al 20. Genera muchas tarjetas seguidas sin hacerlo una por una. Funciona con Videasy y con Popcornflix.</small>
+            <small>Elige Movies o Series, escribe el ID y para series usa Season/Episode. El sistema construye el link de Videasy, trae metadata TMDB y genera la tarjeta.</small>
           </div>
           <div class="field">
             <label>IMDb</label>
@@ -501,19 +471,14 @@ const dbList = $('#dbList');
 const dbSearch = $('#dbSearch');
 const dbFilterFav = $('#dbFilterFav');
 const shareState = $('#shareState');
-const episodeMonitor = $('#episodeMonitor');
 
 const FIELDS = {
   tmdbKey: $('#fTMDBKey'),
   viewerBase: $('#fViewerBase'),
-  provider: $('#fProvider'),
   videoType: $('#fVideoType'),
   tmdb: $('#fTMDB'),
   season: $('#fSeason'),
   episode: $('#fEpisode'),
-  rangeStart: $('#fRangeStart'),
-  rangeEnd: $('#fRangeEnd'),
-  rangeLimit: $('#fRangeLimit'),
   title: $('#fTitle'),
   imdb: $('#fIMDb'),
   quality: $('#fQuality'),
@@ -575,8 +540,6 @@ const LS_VIEWER_BASE = 'PLAYNOW_VIEWER_BASE';
 
 const MAX_DB_ITEMS = 300;
 const AUTO_PREVIEW_LIMIT = 24;
-const DEFAULT_SERIES_SEASONS = 10;
-const DEFAULT_SERIES_EPISODES = 10;
 
 FIELDS.tmdbKey.value = localStorage.getItem(LS_KEY) || '';
 FIELDS.viewerBase.value = localStorage.getItem(LS_VIEWER_BASE) || '';
@@ -621,7 +584,6 @@ function compressCardForStorage(item){
   return {
     id: item.id || '',
     slug: item.slug || '',
-    provider: item.provider || 'videasy',
     content_type: item.content_type || 'movie',
     tmdb_id: item.tmdb_id || '',
     season: item.season || '1',
@@ -645,7 +607,6 @@ function compressCardForStorage(item){
 }
 
 function fillFields(data){
-  if(FIELDS.provider) FIELDS.provider.value = data.provider || FIELDS.provider.value || 'videasy';
   FIELDS.videoType.value = data.content_type || data.videoType || FIELDS.videoType.value || 'movie';
   FIELDS.tmdb.value = data.tmdb_id || data.tmdb || '';
   FIELDS.season.value = data.season || 1;
@@ -693,7 +654,6 @@ function normalizeFromObject(j){
 
   return {
     id: safeTrim(j.id),
-    provider: safeTrim(j.provider || 'videasy') || 'videasy',
     tmdb_id: safeTrim(j.tmdb_id || j.tmdb || j.tmdbId),
     title: safeTrim(j.title || j.name),
     imdb: safeTrim(j.imdb || j.rating),
@@ -719,27 +679,11 @@ function parseVideasyUrl(text){
   const match = String(text || '').match(/https?:\/\/player\.videasy\.net\/(movie|tv)\/(\d+)(?:\/(\d+))?(?:\/(\d+))?/i);
   if(!match) return null;
   return {
-    provider: 'videasy',
     content_type: match[1].toLowerCase(),
     tmdb_id: match[2] || '',
     season: match[3] || '1',
     episode: match[4] || '1',
     play: match[0]
-  };
-}
-
-function parsePopcornflixUrl(text){
-  const match = String(text || '').match(/https?:\/\/popcornflix\.com\/movies\/(\d+)\/?/i);
-  if(!match) return null;
-  return {
-    provider: 'popcornflix',
-    content_type: 'movie',
-    tmdb_id: match[1] || '',
-    season: '1',
-    episode: '1',
-    play: match[0],
-    title: `Popcornflix Movie ${match[1] || ''}`.trim(),
-    quality: 'Popcornflix Movie'
   };
 }
 
@@ -753,59 +697,10 @@ function buildVideasyUrl(contentType, id, season='1', episode='1'){
   return `https://player.videasy.net/movie/${cleanId}`;
 }
 
-function buildPopcornflixUrl(id){
-  const cleanId = String(id || '').trim();
-  if(!cleanId) return '';
-  return `https://popcornflix.com/movies/${cleanId}/`;
-}
-
-function buildProviderUrl(provider, contentType, id, season='1', episode='1'){
-  const cleanProvider = String(provider || 'videasy').trim().toLowerCase();
-  if(cleanProvider === 'popcornflix') return buildPopcornflixUrl(id);
-  return buildVideasyUrl(contentType, id, season, episode);
-}
-
-
-function getSeriesSeasonOptions(max=DEFAULT_SERIES_SEASONS){
-  return Array.from({length:max}, (_,i)=> String(i+1));
-}
-
-function getSeriesEpisodeOptions(max=DEFAULT_SERIES_EPISODES){
-  return Array.from({length:max}, (_,i)=> String(i+1));
-}
-
-function buildSeriesPanel(cardData){
-  if(cardData.content_type !== 'tv' || !cardData.tmdb_id) return '';
-  const seasons = getSeriesSeasonOptions();
-  const episodes = getSeriesEpisodeOptions();
-  const activeSeason = String(cardData.season || '1');
-  const activeEpisode = String(cardData.episode || '1');
-  const seasonButtons = seasons.map(s => `<button type="button" class="series-btn ${s===activeSeason ? 'active' : ''}" data-series-act="season" data-season="${s}">S${s}</button>`).join('');
-  const episodeLinks = episodes.map(e => `<button type="button" class="episode-link" data-series-act="episode" data-episode="${e}" data-url="${escapeHtml(buildVideasyUrl('tv', cardData.tmdb_id, activeSeason, e))}" title="${escapeHtml(buildVideasyUrl('tv', cardData.tmdb_id, activeSeason, e))}">E${e}</button>`).join('');
-  return `
-    <details class="series-panel">
-      <summary>📺 Seasons y episodios default (10 x 10)</summary>
-      <div class="series-grid">
-        <div class="series-row"><span class="series-label">Seasons</span>${seasonButtons}</div>
-        <div class="series-row"><span class="series-label">Monitor</span>
-          <select class="series-monitor-select">
-            <option value="m1">M1</option>
-            <option value="m2">M2</option>
-            <option value="m3">M3</option>
-            <option value="m4">M4</option>
-          </select>
-        </div>
-        <div class="series-row"><span class="series-label">Episodes</span><div class="series-episodes">${episodeLinks}</div></div>
-      </div>
-    </details>`;
-}
-
 function parseRaw(txt){
   const cleanText = cleanJsonText(txt);
   const videasy = parseVideasyUrl(cleanText);
   if(videasy) return normalizeFromObject(videasy);
-  const popcornflix = parsePopcornflixUrl(cleanText);
-  if(popcornflix) return normalizeFromObject(popcornflix);
 
   try{
     const parsed = JSON.parse(cleanText);
@@ -844,7 +739,7 @@ function parseRaw(txt){
 const TMDB_IMG = 'https://image.tmdb.org/t/p/w500';
 const TMDB_CACHE_PREFIX = 'TMDB_CACHE_MOVIE_';
 // 🔐 TOKEN PRIVADO SOLO PARA USO LOCAL. Si cambias el token, pégalo aquí.
-const TMDB_BEARER_TOKEN = 'PEGA_AQUI_TU_TOKEN_JWT';
+const TMDB_BEARER_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhODBkMjA2YzQ1ZGFkMWIyNDllNzdlNzkxZDJiNjlhYyIsIm5iZiI6MTc3MTk5NDU4My41MDMsInN1YiI6IjY5OWU3ZGQ3ZjMzYWY2ZTQ3ZDA0ZDFmMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.FjuQD_AvT8TtP8n3NBw3SYDPwcyFG97PuSx_ii3SUxc';
 
 async function tmdbFetchJson(url, token){
   const res = await fetch(url, {
@@ -1079,7 +974,6 @@ function toCardRecord(data, existingId=''){
   return {
     id: existingId || data.id || uid(),
     slug: slugify(data.title || data.tmdb_id || 'card') || uid(),
-    provider: data.provider || 'videasy',
     content_type: data.content_type || 'movie',
     tmdb_id: data.tmdb_id || '',
     season: data.season || '1',
@@ -1108,11 +1002,9 @@ function updatePreviewCount(){
 function renderCard(d, opts={}){
   const cardData = toCardRecord(d, d.id || '');
   const isSaved = !!findCardById(cardData.id);
-  const tmdbBadge = cardData.tmdb_id ? `<span class="chip">ID: ${escapeHtml(cardData.tmdb_id)}</span>` : '';
-  const providerBadge = `<span class="chip">${escapeHtml((cardData.provider || 'videasy').toUpperCase())}</span>`;
+  const tmdbBadge = cardData.tmdb_id ? `<span class="chip">TMDB: ${escapeHtml(cardData.tmdb_id)}</span>` : '';
   const typeBadge = `<span class="chip">${cardData.content_type === 'tv' ? 'Series' : 'Movie'}</span>`;
   const seBadge = cardData.content_type === 'tv' ? `<span class="chip">S${escapeHtml(cardData.season || '1')}E${escapeHtml(cardData.episode || '1')}</span>` : ''; 
-  const seriesPanel = buildSeriesPanel(cardData);
 
   const html = `
   <div class="card" data-card-id="${escapeHtml(cardData.id || '')}">
@@ -1122,7 +1014,6 @@ function renderCard(d, opts={}){
 
       <div class="chips">
         ${typeBadge}
-        ${providerBadge}
         ${tmdbBadge}
         ${seBadge}
         ${cardData.quality ? `<span class="chip">${escapeHtml(cardData.quality)}</span>` : ''}
@@ -1142,8 +1033,6 @@ function renderCard(d, opts={}){
         ${cardData.cast?.length ? `<b>Actor:</b> ${escapeHtml(cardData.cast.join(', '))} · ` : ''}
         ${cardData.director ? `<b>Director:</b> ${escapeHtml(cardData.director)}` : ''}
       </div>
-
-      ${seriesPanel}
 
       <div class="actions">
         ${cardData.play ? `<a href="${escapeHtml(cardData.play)}" target="_blank" rel="noopener" class="play">▶ Play Now</a>` : ''}
@@ -1187,65 +1076,7 @@ function addManyPreviews(items, limit=AUTO_PREVIEW_LIMIT){
   updatePreviewCount();
 }
 
-
-function attachSeriesPanelActions(cardNode, data){
-  const panel = cardNode.querySelector('.series-panel');
-  if(!panel || data.content_type !== 'tv') return;
-  const panelMonitorSelect = panel.querySelector('.series-monitor-select');
-  if(panelMonitorSelect && episodeMonitor && episodeMonitor.value){
-    panelMonitorSelect.value = episodeMonitor.value;
-  }
-
-  const updateEpisodesForSeason = (seasonValue) => {
-    panel.querySelectorAll('[data-series-act="season"]').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-season') === String(seasonValue));
-    });
-    panel.querySelectorAll('[data-series-act="episode"]').forEach(link => {
-      const episodeValue = link.getAttribute('data-episode') || '1';
-      const url = buildVideasyUrl('tv', data.tmdb_id, seasonValue, episodeValue);
-      link.dataset.url = url;
-      link.title = url;
-    });
-  };
-
-  panel.querySelectorAll('[data-series-act="season"]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const seasonValue = btn.getAttribute('data-season') || '1';
-      data.season = seasonValue;
-      FIELDS.videoType.value = 'tv';
-      FIELDS.tmdb.value = data.tmdb_id || '';
-      FIELDS.season.value = seasonValue;
-      FIELDS.play.value = buildVideasyUrl('tv', data.tmdb_id, seasonValue, data.episode || '1');
-      updateEpisodesForSeason(seasonValue);
-      toast(`Season ${seasonValue} lista ✔`);
-    });
-  });
-
-  panel.querySelectorAll('[data-series-act="episode"]').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const episodeValue = link.getAttribute('data-episode') || '1';
-      const seasonValue = data.season || '1';
-      data.episode = episodeValue;
-      const url = buildVideasyUrl('tv', data.tmdb_id, seasonValue, episodeValue);
-      data.play = url;
-      FIELDS.videoType.value = 'tv';
-      FIELDS.tmdb.value = data.tmdb_id || '';
-      FIELDS.season.value = seasonValue;
-      FIELDS.episode.value = episodeValue;
-      FIELDS.play.value = url;
-      const targetMonitor = (panelMonitorSelect && panelMonitorSelect.value)
-        ? panelMonitorSelect.value
-        : ((episodeMonitor && episodeMonitor.value) ? episodeMonitor.value : 'm1');
-      if(episodeMonitor) episodeMonitor.value = targetMonitor;
-      playIn(targetMonitor, url);
-      toast(`S${seasonValue}E${episodeValue} → ${targetMonitor.toUpperCase()} ✔`);
-    });
-  });
-}
-
 function attachActions(cardNode, data, fromDB=false){
-  attachSeriesPanelActions(cardNode, data);
   cardNode.querySelectorAll('[data-act]').forEach(btn => {
     btn.addEventListener('click', async () => {
       const act = btn.getAttribute('data-act');
@@ -1306,7 +1137,6 @@ function refreshPreviewSavedStates(){
 function currentData(){
   return {
     id: '',
-    provider: (FIELDS.provider?.value || 'videasy').trim() || 'videasy',
     content_type: FIELDS.videoType.value.trim() || 'movie',
     tmdb_id: FIELDS.tmdb.value.trim(),
     season: FIELDS.season.value.trim() || '1',
@@ -1545,7 +1375,7 @@ function loadIntoStage(id,url){
   }
 }
 
-function playIn(id,url){ if(!url) return; const mon = monitors[id]; if(mon){ mon.lastUrl = url; if(mon.input) mon.input.value = url; } loadIntoStage(id,url); }
+function playIn(id,url){ if(!url) return; loadIntoStage(id,url); }
 function requestFS(el){ (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen || el.mozRequestFullScreen)?.call(el); }
 
 document.getElementById('monitors').addEventListener('click', (e) => {
@@ -1558,7 +1388,7 @@ document.getElementById('monitors').addEventListener('click', (e) => {
   if(!mon) return;
 
   if(act === 'play'){
-    const url = mon.input ? mon.input.value.trim() : mon.lastUrl;
+    const url = mon.input.value.trim();
     playIn(id, url);
   }else if(act === 'fs'){
     requestFS(mon.stage);
@@ -1566,8 +1396,8 @@ document.getElementById('monitors').addEventListener('click', (e) => {
     clearStage(id);
     mon.stage.innerHTML = '<div style="opacity:.65;text-align:center;padding:12px"><b>Detenido</b></div>';
   }else if(act === 'pop'){
-    const url = (mon.input ? mon.input.value.trim() : '') || mon.lastUrl || '';
-    if(!url) return toast('Primero reproduce algo en ese monitor');
+    const url = mon.input.value.trim();
+    if(!url) return toast('Pega una URL primero');
     try{ mon.popup?.close?.(); }catch(_){}
     mon.popup = window.open(url, '_blank');
   }
@@ -1585,20 +1415,15 @@ $$('[data-size]').forEach(b => {
 
 function syncPlayFromVideasy(){
   const id = safeTrim(FIELDS.tmdb.value);
-  const provider = safeTrim(FIELDS.provider.value || 'videasy').toLowerCase();
-  let contentType = safeTrim(FIELDS.videoType.value || 'movie').toLowerCase();
+  const contentType = safeTrim(FIELDS.videoType.value || 'movie').toLowerCase();
   const season = safeTrim(FIELDS.season.value || '1') || '1';
   const episode = safeTrim(FIELDS.episode.value || '1') || '1';
   if(!id) return '';
-  if(provider === 'popcornflix') contentType = 'movie';
-  const url = buildProviderUrl(provider, contentType, id, season, episode);
+  const url = buildVideasyUrl(contentType, id, season, episode);
   FIELDS.play.value = url;
-  if(provider === 'popcornflix'){
-    if(!safeTrim(FIELDS.title.value)) FIELDS.title.value = `Popcornflix Movie ${id}`;
-    if(!safeTrim(FIELDS.quality.value) || /^(Videasy)/i.test(safeTrim(FIELDS.quality.value))) FIELDS.quality.value = 'Popcornflix Movie';
-  }else if(contentType === 'tv'){
+  if(contentType === 'tv'){
     FIELDS.quality.value = `Videasy TV · S${season}E${episode}`;
-  }else if(!safeTrim(FIELDS.quality.value) || /^(Popcornflix)/i.test(safeTrim(FIELDS.quality.value))){
+  }else if(!safeTrim(FIELDS.quality.value)){
     FIELDS.quality.value = 'Videasy Movie';
   }
   return url;
@@ -1606,109 +1431,14 @@ function syncPlayFromVideasy(){
 
 async function generateFromVideasy(autoGenerateCard=true){
   const id = safeTrim(FIELDS.tmdb.value);
-  const provider = safeTrim(FIELDS.provider.value || 'videasy').toLowerCase();
   if(!id) return toast('Pon el ID primero.');
   syncPlayFromVideasy();
-  if(provider === 'videasy'){
-    await lookupTMDB();
-  }else{
-    if(!safeTrim(FIELDS.title.value)) FIELDS.title.value = `Popcornflix Movie ${id}`;
-    if(!safeTrim(FIELDS.plot.value)) FIELDS.plot.value = `Contenido generado desde Popcornflix con ID ${id}.`;
-  }
+  await lookupTMDB();
   if(autoGenerateCard){
     generate();
   }else{
-    toast(provider === 'popcornflix' ? 'Link Popcornflix construido ✔' : 'Link Videasy construido ✔');
+    toast('Link Videasy construido ✔');
   }
-}
-
-
-async function generateRangeFromVideasy(){
-  const provider = safeTrim(FIELDS.provider.value || 'videasy').toLowerCase();
-  let contentType = safeTrim(FIELDS.videoType.value || 'movie').toLowerCase();
-  if(provider === 'popcornflix') contentType = 'movie';
-  const start = parseInt(safeTrim(FIELDS.rangeStart.value || '1'), 10);
-  const end = parseInt(safeTrim(FIELDS.rangeEnd.value || ''), 10);
-  const limit = parseInt(safeTrim(FIELDS.rangeLimit.value || '20'), 10) || 20;
-
-  if(!Number.isFinite(start) || !Number.isFinite(end) || start < 1 || end < start){
-    return toast('Rango inválido. Revisa desde / hasta.');
-  }
-
-  const totalRequested = end - start + 1;
-  const maxItems = Math.max(1, Math.min(limit, 100));
-  const ids = Array.from({length: Math.min(totalRequested, maxItems)}, (_, i) => start + i);
-  if(!ids.length) return toast('No hay IDs para generar.');
-
-  toast(`Generando ${ids.length} tarjeta(s)...`);
-  cards.innerHTML = '';
-  updatePreviewCount();
-
-  const original = {
-    provider: FIELDS.provider.value,
-    tmdb: FIELDS.tmdb.value,
-    season: FIELDS.season.value,
-    episode: FIELDS.episode.value,
-    play: FIELDS.play.value,
-    title: FIELDS.title.value,
-    imdb: FIELDS.imdb.value,
-    quality: FIELDS.quality.value,
-    duration: FIELDS.duration.value,
-    year: FIELDS.year.value,
-    country: FIELDS.country.value,
-    plot: FIELDS.plot.value,
-    genres: FIELDS.genres.value,
-    cast: FIELDS.cast.value,
-    director: FIELDS.director.value,
-    poster: FIELDS.poster.value
-  };
-
-  for(const currentId of ids){
-    FIELDS.tmdb.value = String(currentId);
-    FIELDS.title.value = '';
-    FIELDS.plot.value = '';
-    FIELDS.poster.value = '';
-    FIELDS.imdb.value = '';
-    FIELDS.duration.value = '';
-    FIELDS.year.value = '';
-    FIELDS.country.value = '';
-    FIELDS.genres.value = '';
-    FIELDS.cast.value = '';
-    FIELDS.director.value = '';
-    if(contentType === 'tv'){
-      if(!safeTrim(FIELDS.season.value)) FIELDS.season.value = '1';
-      if(!safeTrim(FIELDS.episode.value)) FIELDS.episode.value = '1';
-    }
-    syncPlayFromVideasy();
-    if(provider === 'videasy'){
-      await lookupTMDB();
-    } else {
-      FIELDS.title.value = `Popcornflix Movie ${currentId}`;
-      FIELDS.plot.value = `Contenido generado desde Popcornflix con ID ${currentId}.`;
-      FIELDS.quality.value = 'Popcornflix Movie';
-    }
-    generate();
-  }
-
-  FIELDS.provider.value = original.provider;
-  Object.assign(FIELDS.tmdb, {value: original.tmdb});
-  FIELDS.season.value = original.season;
-  FIELDS.episode.value = original.episode;
-  FIELDS.play.value = original.play;
-  FIELDS.title.value = original.title;
-  FIELDS.imdb.value = original.imdb;
-  FIELDS.quality.value = original.quality;
-  FIELDS.duration.value = original.duration;
-  FIELDS.year.value = original.year;
-  FIELDS.country.value = original.country;
-  FIELDS.plot.value = original.plot;
-  FIELDS.genres.value = original.genres;
-  FIELDS.cast.value = original.cast;
-  FIELDS.director.value = original.director;
-  FIELDS.poster.value = original.poster;
-  if(safeTrim(FIELDS.tmdb.value)) syncPlayFromVideasy();
-
-  toast(`Rango generado ✔ ${ids[0]} → ${ids[ids.length - 1]} (${ids.length} tarjetas)`);
 }
 
 FIELDS.videoType.addEventListener('change', () => {
@@ -1726,7 +1456,6 @@ FIELDS.season.addEventListener('input', () => { if(safeTrim(FIELDS.tmdb.value)) 
 FIELDS.episode.addEventListener('input', () => { if(safeTrim(FIELDS.tmdb.value)) syncPlayFromVideasy(); });
 $('#btnVideasyBuild').addEventListener('click', () => generateFromVideasy(true));
 $('#btnVideasyOnlyLink').addEventListener('click', () => generateFromVideasy(false));
-$('#btnVideasyRange').addEventListener('click', () => generateRangeFromVideasy());
 FIELDS.videoType.dispatchEvent(new Event('change'));
 
 $('#btnGenerate').addEventListener('click', generate);
@@ -1832,9 +1561,6 @@ document.addEventListener('keydown', (e) => {
   if(e.key === 'Escape') closeDB();
 });
 
-if(FIELDS.provider){
-  FIELDS.provider.dispatchEvent(new Event('change'));
-}
 renderDB();
 updatePreviewCount();
 </script>
